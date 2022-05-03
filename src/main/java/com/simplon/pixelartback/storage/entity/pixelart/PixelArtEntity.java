@@ -10,12 +10,13 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor //TODO?
-@AllArgsConstructor //TODO?
+//@NoArgsConstruct
+// or //TODO?
 //@Builder //TODO?
 public class PixelArtEntity {
 
 //    TODO: see best way/form for unique id definition!
+    private static final long serialVersionUID = 6858481209380769717L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,15 +25,16 @@ public class PixelArtEntity {
     private Long id;
 //    private Long idPixelArt;
 
-    @Column(name = "uuid")
-    private UUID uuid;
+//    @Column(name = "uuid", nullable = false, unique = true)
+//    private UUID uuid;
 
-    @Column(name = "name", nullable = false) 
+    @Column(name = "name", length = 50, nullable = false)
     private String name;
 
-    @Column(name = "image", nullable = false)
+//    @Column(name = "image", nullable = false)
+//    @Column(name = "image", nullable = false)
 //    TODO: see format: Blob, BlobType, Image
-    private String image; //TODO: for initial testing, otherwise: private Base64 productImage;
+//    private String image; //TODO: for initial testing, otherwise: private Base64 productImage;
 
 //    TODO: adding this parameter once I have created the User class too!
 //    @NotNull
@@ -41,4 +43,21 @@ public class PixelArtEntity {
 
 //    @Column(name = "product_price", nullable = false)
 //    private Integer productPrice;
+
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof PixelArtEntity)) {
+            return false;
+        }
+        return super.equals(obj);
+    }
 }

@@ -9,11 +9,13 @@ public interface PixelArtService {
 
     //TODO: all those methods "throws" exception (ProjectService does, UserService does not!)?
     List<PixelArtDto> getAllPixelArt();
-    PixelArtDto getPixelArtByUuid(UUID uuid);
+//    PixelArtDto getPixelArtByUuid(UUID uuid);
+    PixelArtDto getPixelArtById(Long id);
 
 //    List<PixelArtDto> getPixelArtByUser(UserDto userDto); //TODO: correct?
     PixelArtDto createPixelArt(PixelArtDto pixelArtDto);
     PixelArtDto updatePixelArt(PixelArtDto pixelArtDto);
-    void deletePixelArt(UUID uuid);
+//    void deletePixelArt(UUID uuid);
+    void deletePixelArt(Long id);
 
 }

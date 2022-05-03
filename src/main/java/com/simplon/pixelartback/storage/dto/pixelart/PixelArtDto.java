@@ -16,12 +16,17 @@ public class PixelArtDto {
 //    TODO: is this necessary here? Nem kellene valamely ertekeket elrejteni?
     @JsonProperty("id")
     private Long id;
-    @JsonProperty("uuid")
-    private UUID uuid;
+//    @JsonProperty("uuid")
+//    private UUID uuid;
     @JsonProperty("name")
     private String name;
-    @JsonProperty("image")
-    private String image;
+//    @JsonProperty("image")
+//    private String image;
     //    @JsonProperty("idUser")
     //    private UUID idUser;
+
+//    public PixelArtDto uuid(UUID uuid) {
+//        this.uuid = uuid;
+//        return this;
+//    }
 }
