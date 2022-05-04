@@ -10,6 +10,7 @@
 	</parent>
 	<groupId>com.simplon</groupId>
 	<artifactId>pixelart-back</artifactId>
+
 	<version>0.0.1-SNAPSHOT</version>
 	<name>pixelart-back</name>
 	<description>Master project for Spring Boot</description>
