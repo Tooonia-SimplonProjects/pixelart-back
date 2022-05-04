@@ -16,7 +16,7 @@ import java.util.UUID;
 public class PixelArtEntity {
 
 //    TODO: see best way/form for unique id definition!
-    private static final long serialVersionUID = 6858481209380769717L;
+//    private static final long serialVersionUID = 6858481209380769717L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
