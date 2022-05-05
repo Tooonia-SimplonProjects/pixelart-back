@@ -5,6 +5,7 @@ import com.simplon.pixelartback.storage.dto.pixelart.PixelArtDto;
 import com.simplon.pixelartback.service.mapper.PixelArtMapper;
 import com.simplon.pixelartback.service.pixelart.PixelArtService;
 import com.simplon.pixelartback.storage.dao.pixelart.PixelArtDao;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,9 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-//@Transactional(readOnly = true) //TODO needed?
-//@RequiredArgsConstructor //TODO needed?
+// A hint for the persistence provider that the transaction should be 'read only'; default value is "false"
+@Transactional(readOnly = true)
+@RequiredArgsConstructor //TODO needed?
 @Slf4j //TODO needed?
 public class PixelArtServiceImpl implements PixelArtService {
 
@@ -59,7 +61,7 @@ public class PixelArtServiceImpl implements PixelArtService {
 
 //    TODO: if exception / error to handle, is it already here? Because can't just write those at Controller?!
     @Override
-//    @Transactional(readOnly = false) //TODO: needed?
+    @Transactional //(readOnly = false) is the default
     public PixelArtDto createPixelArt(PixelArtDto pixelArtDto) {
         if (pixelArtDto == null) {
             throw new IllegalArgumentException("PixelArt is obligatory");
@@ -75,7 +77,7 @@ public class PixelArtServiceImpl implements PixelArtService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional //(readOnly = false) is the default
     public PixelArtDto updatePixelArt(PixelArtDto pixelArtDto) {
         if (pixelArtDto.getId() == null) {
             throw new IllegalArgumentException("ID pixelArt missing");
@@ -97,7 +99,7 @@ public class PixelArtServiceImpl implements PixelArtService {
     }
 
     @Override
-//    @Transactional(readOnly = false)
+    @Transactional //(readOnly = false) is the default
     public void deletePixelArt(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("ID pixelArt missing");

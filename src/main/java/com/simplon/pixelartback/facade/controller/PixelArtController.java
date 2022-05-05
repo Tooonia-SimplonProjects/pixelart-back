@@ -47,7 +47,7 @@ public class PixelArtController {
 //  CREATE own pixelArts    POST  /api/pixelart
     @PostMapping("/pixelart")
 //    TODO: very likely there will be 2 @param here : userId and pixelArtDto !!! <= line 91 UsersApi.class!
-    public ResponseEntity<PixelArtDto> createPixelArt(PixelArtDto pixelArtDto) throws Exception {
+    public ResponseEntity<PixelArtDto> createPixelArt(@RequestBody PixelArtDto pixelArtDto) throws Exception {
         val createdPixelArtDto = pixelArtService.createPixelArt(pixelArtDto);
         val location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(createdPixelArtDto.getId()).toUri();
@@ -58,7 +58,7 @@ public class PixelArtController {
 //    UPDATE one particular pixelArt   PUT  /api/pixelart/{id_pixel_art}
     @PutMapping("/pixelart/{id}")
 //    TODO: very likely there will be 2 @param here : userId and pixelArtDto !!! <= line 118 UsersApi.class!
-    public ResponseEntity<PixelArtDto> updatePixelArt(PixelArtDto pixelArtDto) throws Exception {
+    public ResponseEntity<PixelArtDto> updatePixelArt(@PathVariable(name = "id") Long id, @RequestBody PixelArtDto pixelArtDto) throws Exception {
         return ResponseEntity.ok(pixelArtService.updatePixelArt(pixelArtDto));
 //    TODO: why different at "return ResponseEntity.noContent().build(); (line 78) or "new ResponseEntity<>(HttpStatus.NO_CONTENT); (line 161) ???
     }
@@ -66,7 +66,7 @@ public class PixelArtController {
 //    DELETE one particular pixelArt    DELETE  /api/pixelart/{id_pixel_art}
     @DeleteMapping("/pixelart/{id}")
 //    TODO: will there be 2 @param here : userId and pixelArtDto !!! <= line 99 UsersController or just one like in line 83 of ProjectController?
-    public ResponseEntity<Void> deletePixelArt(Long id) throws Exception {
+    public ResponseEntity<Void> deletePixelArt(@PathVariable(name = "id") Long id) throws Exception {
         pixelArtService.deletePixelArt(id);
 //        return ResponseEntity.noContent().build(); //line 85 ProjectController TODO!!
         return ResponseEntity.ok().build(); //line 101 UserController TODO!!
