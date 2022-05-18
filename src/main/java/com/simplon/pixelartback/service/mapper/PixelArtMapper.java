@@ -1,10 +1,8 @@
 package com.simplon.pixelartback.service.mapper;
 
-import com.simplon.pixelartback.storage.dto.pixelart.PixelArtDto;
+import com.simplon.pixelartback.storage.dto.PixelArtDto;
 import com.simplon.pixelartback.storage.entity.pixelart.PixelArtEntity;
 import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
-import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;

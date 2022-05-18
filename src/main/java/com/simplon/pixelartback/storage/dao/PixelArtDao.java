@@ -1,4 +1,4 @@
-package com.simplon.pixelartback.storage.dao.pixelart;
+package com.simplon.pixelartback.storage.dao;
 
 import com.simplon.pixelartback.storage.entity.pixelart.PixelArtEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface PixelArtDao extends JpaRepository<PixelArtEntity, Long> {
 
     PixelArtEntity getPixelArtById(Long id);
-//    PixelArtEntity findByUuid(UUID uuid); //TODO: eror message: craches with the findById of JpaRepository!?
+//    PixelArtEntity findByUuid(UUID uuid); //Error message: craches with the findById of JpaRepository!?
 
 //    List<PixelArtEntity> findByUser(UUID userUuid); //TODO: implement when UserEntity has been created!
 }

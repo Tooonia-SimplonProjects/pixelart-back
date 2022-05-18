@@ -1,4 +1,6 @@
 package com.simplon.pixelartback.storage.entity.language;
 
-public class LanguageEntity {
+public enum LanguageEntity {
+    FR,
+    EN
 }

@@ -1,4 +1,6 @@
 package com.simplon.pixelartback.storage.entity.role;
 
-public class RoleEntity {
+public enum RoleEntity {
+    ADMIN,
+    REGISTERED_USER
 }
