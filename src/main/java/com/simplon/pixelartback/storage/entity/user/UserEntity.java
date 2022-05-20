@@ -53,7 +53,7 @@ public class UserEntity implements Serializable {
 //    TODO: see this again: "Defining here @OneToMany, we are making it bidirectional"
 //    @JoinColumn(name = "id") <<< when having "mappedBy" defined here, we can't add that @ : that would put this "id" as an extra column to PixelArt
 //
-////    This annotation is important to break the cycles that would print in the created pixelart
+////    This "@JsonIgnoreProperties" annotation is important to break the cycles that would print in the created pixelart
 ////    in the response recursively under "pixelArtEntityList" with a GET all for PixelArt:
 //    Finally: removed "cascade = CascadeType.ALL" and added that code from:
 //    source: https://stackoverflow.com/questions/22688402/delete-not-working-with-jparepository

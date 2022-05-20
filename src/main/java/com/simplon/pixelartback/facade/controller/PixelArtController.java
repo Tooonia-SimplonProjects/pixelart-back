@@ -71,7 +71,12 @@ public class PixelArtController {
     @PutMapping("/pixelart/{id}")
 //    TODO: very likely there will be 2 @param here : userId and pixelArtDto !!! <= line 118 UsersApi.class!
     public ResponseEntity<PixelArtSimpleDto> updatePixelArt(@PathVariable(name = "id") Long id, @RequestBody PixelArtSimpleDto pixelArtSimpleDto) throws Exception {
+        if(id.longValue() != pixelArtSimpleDto.getId().longValue()) {
+            throw new IllegalArgumentException("Id in URL " + id + " does not match the id of of current pixelArt : " + pixelArtSimpleDto.getId()
+                    + "PixelArt id can not be updated.");
+        }
         return ResponseEntity.ok(pixelArtService.updatePixelArt(pixelArtSimpleDto));
+
 //    TODO: why different at "return ResponseEntity.noContent().build(); (line 78) or "new ResponseEntity<>(HttpStatus.NO_CONTENT); (line 161) ???
     }
 

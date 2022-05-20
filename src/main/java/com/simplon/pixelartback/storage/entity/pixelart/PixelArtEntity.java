@@ -34,7 +34,7 @@ public class PixelArtEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
 //    @Column(name = "id_pixel_art")
     private Long id;
 //    private Long idPixelArt;
