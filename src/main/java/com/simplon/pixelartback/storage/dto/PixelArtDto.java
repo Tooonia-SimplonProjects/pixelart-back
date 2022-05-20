@@ -26,8 +26,12 @@ public class PixelArtDto {
 //    @Column(name = "image", nullable = false)
 //    TODO: see format: Blob, BlobType, Image // private Base64 productImage;
 
-    @JsonProperty("id_user_fk")
-    private UserEntity userEntity;
+//    @JsonProperty("id_user_fk")
+//    private Long userEntity;
+    @JsonProperty("id_user_fk") //TODO: lehet, h ide
+    private UserForPixelArtDto userEntity;
+//    @JsonProperty("id_user_fk")
+//    private UserEntity userEntity;
 
 
     //    private UserEntity userEntity;

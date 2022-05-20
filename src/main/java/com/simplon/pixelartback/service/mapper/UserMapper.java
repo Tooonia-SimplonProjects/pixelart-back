@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface UserMapper extends AbstractMapper<UserEntity, UserDto>{
+public interface UserMapper extends AbstractMapper<UserEntity, UserDto> {
 
     @Override
     UserEntity dtoToEntity(UserDto dto);
@@ -23,11 +23,6 @@ public interface UserMapper extends AbstractMapper<UserEntity, UserDto>{
 
     @Override
     UserDto entityToDto(UserEntity entity);
-
-//    We need to define an empty mapping method for each of the DTO used.
-//    For GET User, we only want a simle DTO:
-    UserGetDto entityToGetDto(UserEntity entity);
-
 
     @Override
     List<UserDto> entitiesToDtos(Collection<UserEntity> entities);

@@ -7,12 +7,9 @@ import com.simplon.pixelartback.storage.entity.role.RoleEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 //The validation logic is defined at that level:
@@ -44,6 +41,8 @@ public class UserDto {
     private RoleEntity role;
 
     @JsonProperty("pixelarts")
-    private List<PixelArtEntity> pixelArtEntityList;
+    private List<PixelArtSimpleDto> pixelArtEntityList;
+//    @JsonProperty("pixelarts")
+//    private List<PixelArtEntity> pixelArtEntityList;
 
 }

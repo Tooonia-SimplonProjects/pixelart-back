@@ -1,9 +1,12 @@
 package com.simplon.pixelartback.service.user.impl;
 
+import com.simplon.pixelartback.service.mapper.UserForPixelArtMapper;
+import com.simplon.pixelartback.service.mapper.UserGetMapper;
 import com.simplon.pixelartback.service.mapper.UserMapper;
 import com.simplon.pixelartback.service.user.UserService;
 import com.simplon.pixelartback.storage.dao.UserDao;
 import com.simplon.pixelartback.storage.dto.UserDto;
+import com.simplon.pixelartback.storage.dto.UserForPixelArtDto;
 import com.simplon.pixelartback.storage.dto.UserGetDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,35 +30,41 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Autowired
+    private UserGetMapper userGetMapper;
+
+    @Autowired
+    private UserForPixelArtMapper userForPixelArtMapper;
+
+    @Autowired
     private UserDao userDao;
 
     @Override
-    public List<UserDto> getAllUsers() throws EmptyResultDataAccessException {
-        return userMapper.entitiesToDtos(userDao.findAll());
+    public List<UserGetDto> getAllUsers() throws EmptyResultDataAccessException {
+        return userGetMapper.entitiesToDtos(userDao.findAll());
     }
 
     @Override
-    public UserDto getUserByUuid(UUID uuid) {
+    public UserGetDto getUserByUuid(UUID uuid) {
         if(uuid == null) {
             throw new IllegalArgumentException("UUID User is missing");
         }
-        return userMapper.entityToDto(userDao.findByUuid(uuid));
+        return userGetMapper.entityToDto(userDao.findByUuid(uuid));
     }
 
     @Override
-    public UserDto getUserById(Long id) {
+    public UserGetDto getUserById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Id PixelArt is missing");
         }
-        return userMapper.entityToDto(userDao.getUserById(id));
+        return userGetMapper.entityToDto(userDao.getUserById(id));
     }
 
     @Override
-    public UserGetDto getSimplifiedUserById(Long id) {
+    public UserForPixelArtDto getUserForPixelArt(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Id PixelArt is missing");
         }
-        return userMapper.entityToGetDto(userDao.getUserById(id));
+        return userForPixelArtMapper.entityToDto(userDao.getUserById(id));
     }
 
     @Override
@@ -69,5 +78,19 @@ public class UserServiceImpl implements UserService {
         val savedEntity = userDao.save(entity);
 
         return userMapper.entityToDto(savedEntity);
+    }
+
+    @Override
+    @Transactional //(readOnly = false)
+    public void deleteUser(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID user missing");
+        }
+        val existingEntity = userDao.getUserById(id);
+        if (existingEntity == null) {
+            throw new IllegalArgumentException("User unknown : " + id);
+        }
+
+        userDao.delete(existingEntity);
     }
 }

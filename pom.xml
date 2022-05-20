@@ -101,6 +101,7 @@
 				</configuration>
 			</plugin>
 			<!-- Generate Lombok annotation then Mapstruct classes -->
+			<!-- Dependency syntax/order is slightly different at https://www.baeldung.com/mapstruct -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>

@@ -56,10 +56,10 @@ public class PixelArtEntity implements Serializable {
 //    In a One-to-Many/Many-to-One relationship, the owning side is usually defined on the ‘many' side of the relationship.
 //    It's usually the side which owns the foreign key
 //    The @JoinColumn annotation defines that actual physical mapping on the owning side:
+//    The @JsonIgnoreProperties annotation is important to break the cycles that would print the created pixelart recursively
+//    in the response of a GET all for PixelArt under "pixelArtEntityList [] " :
     @ManyToOne(fetch = FetchType.EAGER, targetEntity = UserEntity.class)
     @JoinColumn(name = "id_user_fk", referencedColumnName = "id", nullable = false) // It is a fk!
-//    This annotation is important to break the cycles that would print the created pixelart recursively
-//    in the response of a GET all for PixelArt under "pixelArtEntityList [] " :
     @JsonIgnoreProperties("pixelArtEntityList")
     private UserEntity userEntity;
 
@@ -74,7 +74,14 @@ public class PixelArtEntity implements Serializable {
 //        this.userEntity = userEntity;
 //    }
 
+    //    source: https://stackoverflow.com/questions/22688402/delete-not-working-with-jparepository
+//    @PreRemove
+    public void dismissParent() {
+        this.userEntity.dismissChild(this); //SYNCHRONIZING THE OTHER SIDE OF RELATIONSHIP
+        this.userEntity = null;
+    }
 
+//TODO: see theses 2 methods! (<<< User.java)
     @Override
     public int hashCode() {
         return super.hashCode();

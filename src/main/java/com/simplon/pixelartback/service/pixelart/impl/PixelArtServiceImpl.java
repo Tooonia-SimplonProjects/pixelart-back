@@ -1,11 +1,13 @@
 package com.simplon.pixelartback.service.pixelart.impl;
 
+import com.simplon.pixelartback.service.mapper.PixelArtSimpleMapper;
 import com.simplon.pixelartback.service.mapper.UserMapper;
 import com.simplon.pixelartback.storage.dao.UserDao;
 import com.simplon.pixelartback.storage.dto.PixelArtDto;
 import com.simplon.pixelartback.service.mapper.PixelArtMapper;
 import com.simplon.pixelartback.service.pixelart.PixelArtService;
 import com.simplon.pixelartback.storage.dao.PixelArtDao;
+import com.simplon.pixelartback.storage.dto.PixelArtSimpleDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -32,6 +34,9 @@ public class PixelArtServiceImpl implements PixelArtService {
     private PixelArtMapper pixelArtMapper;
 
     @Autowired
+    private PixelArtSimpleMapper pixelArtSimpleMapper;
+
+    @Autowired
     private PixelArtDao pixelArtDao;
 
     @Autowired
@@ -55,12 +60,23 @@ public class PixelArtServiceImpl implements PixelArtService {
     //    public PixelArtDto getPixelArtByUuid(UUID uuid) {
 //        return pixelArtMapper.entityToDto(pixelArtDao.findByUuid(uuid));
 //    }
+
+    @Override
+    public List<PixelArtSimpleDto> getAllSimplePixelArt() {
+        return pixelArtSimpleMapper.entitiesToDtos(pixelArtDao.findAll());
+    }
+
     @Override
     public PixelArtDto getPixelArtById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Id PixelArt is missing");
         }
         return pixelArtMapper.entityToDto(pixelArtDao.getPixelArtById(id));
+    }
+
+    @Override
+    public PixelArtSimpleDto getSimplePixelArtById(Long id) {
+        return pixelArtSimpleMapper.entityToDto(pixelArtDao.getPixelArtById(id));
     }
 
     @Override
@@ -84,29 +100,29 @@ public class PixelArtServiceImpl implements PixelArtService {
     }
 
     @Override
-    @Transactional
-    public PixelArtDto updatePixelArt(PixelArtDto pixelArtDto) {
-        if (pixelArtDto.getId() == null) {
+    @Transactional //(readOnly = false)
+    public PixelArtSimpleDto updatePixelArt(PixelArtSimpleDto pixelArtSimpleDto) {
+        if (pixelArtSimpleDto.getId() == null) {
             throw new IllegalArgumentException("ID pixelArt missing");
         }
 //        val entity = pixelArtMapper.dtoToEntity(pixelArtDto); // According to UserServiceImpl no need for that!
-        val existingEntity = pixelArtDao.getPixelArtById(pixelArtDto.getId());
+        val existingEntity = pixelArtDao.getPixelArtById(pixelArtSimpleDto.getId());
 //        System.out.println(pixelArtDto.getId());
 //        System.out.println(existingEntity);
 //        TODO: why this if statement is always false if written with 'existingEntity' that is used in UserServiceImpl line 186?
         if (existingEntity == null) {
-            throw new IllegalArgumentException("PixelArt unknown : " + pixelArtDto.getId());
+            throw new IllegalArgumentException("PixelArt unknown : " + pixelArtSimpleDto.getId());
         }
 //        Updating the existing entity with pixelArtDto values:
-        pixelArtMapper.dtoToEntity(pixelArtDto, existingEntity);
+        pixelArtSimpleMapper.dtoToEntity(pixelArtSimpleDto, existingEntity);
 //        val savedEntity = pixelArtDao.save(existingEntity);
         pixelArtDao.save(existingEntity);
 
-        return pixelArtMapper.entityToDto(existingEntity);
+        return pixelArtSimpleMapper.entityToDto(existingEntity);
     }
 
     @Override
-    @Transactional
+    @Transactional //(readOnly = false)
     public void deletePixelArt(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("ID pixelArt missing");

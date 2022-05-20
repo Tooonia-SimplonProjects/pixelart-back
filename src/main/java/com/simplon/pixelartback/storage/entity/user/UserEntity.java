@@ -51,16 +51,29 @@ public class UserEntity implements Serializable {
 //    FONTOS: valoszinuleg a "FetchType.EAGER" segitett!!!
 //    https://www.baeldung.com/jpa-joincolumn-vs-mappedby :
 //    TODO: see this again: "Defining here @OneToMany, we are making it bidirectional"
-    @OneToMany(mappedBy="userEntity", cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = PixelArtEntity.class)
 //    @JoinColumn(name = "id") <<< when having "mappedBy" defined here, we can't add that @ : that would put this "id" as an extra column to PixelArt
-
-//    This annotation is important to break the cycles that would print in the created pixelart
-//    in the response recursively under "pixelArtEntityList" with a GET all for PixelArt:
+//
+////    This annotation is important to break the cycles that would print in the created pixelart
+////    in the response recursively under "pixelArtEntityList" with a GET all for PixelArt:
+//    Finally: removed "cascade = CascadeType.ALL" and added that code from:
+//    source: https://stackoverflow.com/questions/22688402/delete-not-working-with-jparepository
+    @OneToMany(mappedBy="userEntity", orphanRemoval = true, fetch = FetchType.EAGER, targetEntity = PixelArtEntity.class)
     @JsonIgnoreProperties("userEntity")
     private List<PixelArtEntity> pixelArtEntityList;
 
     public UserEntity() {
         super();
+    }
+
+    //    source: https://stackoverflow.com/questions/22688402/delete-not-working-with-jparepository
+
+    public void dismissChild(PixelArtEntity pixelArtEntity) {
+        this.pixelArtEntityList.remove(pixelArtEntity);
+    }
+//    @PreRemove
+    public void dismissChildren() {
+        this.pixelArtEntityList.forEach(pixelArtEntity -> pixelArtEntity.dismissParent()); // SYNCHRONIZING THE OTHER SIDE OF RELATIONSHIP
+        this.pixelArtEntityList.clear();
     }
 
 }

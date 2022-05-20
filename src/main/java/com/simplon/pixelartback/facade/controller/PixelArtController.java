@@ -2,6 +2,7 @@ package com.simplon.pixelartback.facade.controller;
 
 import com.simplon.pixelartback.storage.dto.PixelArtDto;
 import com.simplon.pixelartback.service.pixelart.PixelArtService;
+import com.simplon.pixelartback.storage.dto.PixelArtSimpleDto;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +35,22 @@ public class PixelArtController {
 //        TODO: request.getHeader("Accept"), MediaType/valueOf("application/json"), response... <= needed here these elements like in UsersApi?
     }
 
+    //  READ / GET all simplified pixelart (catalog)    GET /api/pixelart-simplelist
+    @GetMapping("/pixelart-simplelist")
+    public ResponseEntity<List<PixelArtSimpleDto>> getAllSimplePixelArt() throws Exception {
+        return ResponseEntity.ok(pixelArtService.getAllSimplePixelArt());
+    }
+
 //  READ / GET one pixelArt by Id    GET /api/pixelart/{id}
     @GetMapping("/pixelart/{id}")
     public ResponseEntity<PixelArtDto> getPixelArtById(@PathVariable("id") Long id) throws Exception {
         return  ResponseEntity.ok(pixelArtService.getPixelArtById(id));
+    }
+
+    //  READ / GET one simple pixelArt by Id    GET /api/pixelart-simple/{id}
+    @GetMapping("/pixelart-simple/{id}")
+    public ResponseEntity<PixelArtSimpleDto> getSimplePixelArtById(@PathVariable("id") Long id) throws Exception {
+        return  ResponseEntity.ok(pixelArtService.getSimplePixelArtById(id));
     }
 
 //  READ / GET all pixelArt of one particular User    GET  /api/pixelart/currentuser
@@ -57,8 +70,8 @@ public class PixelArtController {
 //    UPDATE one particular pixelArt   PUT  /api/pixelart/{id}
     @PutMapping("/pixelart/{id}")
 //    TODO: very likely there will be 2 @param here : userId and pixelArtDto !!! <= line 118 UsersApi.class!
-    public ResponseEntity<PixelArtDto> updatePixelArt(@PathVariable(name = "id") Long id, @RequestBody PixelArtDto pixelArtDto) throws Exception {
-        return ResponseEntity.ok(pixelArtService.updatePixelArt(pixelArtDto));
+    public ResponseEntity<PixelArtSimpleDto> updatePixelArt(@PathVariable(name = "id") Long id, @RequestBody PixelArtSimpleDto pixelArtSimpleDto) throws Exception {
+        return ResponseEntity.ok(pixelArtService.updatePixelArt(pixelArtSimpleDto));
 //    TODO: why different at "return ResponseEntity.noContent().build(); (line 78) or "new ResponseEntity<>(HttpStatus.NO_CONTENT); (line 161) ???
     }
 
