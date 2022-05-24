@@ -13,13 +13,17 @@ public interface UserService {
 //    Normally, all GET methods are configured with a simplified userDto, without password:
     List<UserGetDto> getAllUsers();
 
-    UserGetDto getUserByUuid(UUID uuid);
+    UserDto getUserByUuid(UUID uuid);
 
     UserGetDto getUserById(Long id);
 
     UserForPixelArtDto getUserForPixelArt(Long id);
 
+    UserDto findByEmail(String email);
+
     UserDto createUser(UserDto userDto);
 
     void deleteUser(Long id);
+
+    void loginUser(UserDto userDto) throws Exception;
 }

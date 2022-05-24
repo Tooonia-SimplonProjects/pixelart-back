@@ -1,14 +1,13 @@
 package com.simplon.pixelartback.storage.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.simplon.pixelartback.storage.entity.language.LanguageEntity;
 import com.simplon.pixelartback.storage.entity.pixelart.PixelArtEntity;
 import com.simplon.pixelartback.storage.entity.role.RoleEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,6 +20,7 @@ import java.util.UUID;
 @Setter
 @ToString
 @AllArgsConstructor
+@NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class UserEntity implements Serializable {
 
@@ -32,17 +32,21 @@ public class UserEntity implements Serializable {
     @Column(name = "uuid", nullable = false, unique = true)
     private UUID uuid;
 
-    @Column(name = "alias", length = 30, nullable = false, unique = true)
+    @Column(name = "alias", length = 150, nullable = false, unique = true)
     private String alias;
 
-    @Column(name = "user_email", length = 50, nullable = false, unique = true)
+    @Column(name = "user_email", length = 150, nullable = false, unique = true)
     private String email;
 
-    @Column(name = "user_password", length = 50, nullable = false)
+    @Column(name = "user_password", length = 150, nullable = false)
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    @JsonIgnoreProperties("user_password")
+//    @JsonIgnore
     private String password;
 
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
+//    @JsonIgnore
     private RoleEntity role;
 
 //    @Column(name = "language", nullable = false)
@@ -61,12 +65,7 @@ public class UserEntity implements Serializable {
     @JsonIgnoreProperties("userEntity")
     private List<PixelArtEntity> pixelArtEntityList;
 
-    public UserEntity() {
-        super();
-    }
-
     //    source: https://stackoverflow.com/questions/22688402/delete-not-working-with-jparepository
-
     public void dismissChild(PixelArtEntity pixelArtEntity) {
         this.pixelArtEntityList.remove(pixelArtEntity);
     }
@@ -76,4 +75,13 @@ public class UserEntity implements Serializable {
         this.pixelArtEntityList.clear();
     }
 
+//    @JsonIgnore
+//    public String getEmail() {
+//        return email;
+//    }
+
+//    @JsonProperty
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
 }

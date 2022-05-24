@@ -7,6 +7,8 @@ import com.simplon.pixelartback.storage.entity.role.RoleEntity;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,17 +20,24 @@ import java.util.UUID;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class UserGetDto {
 
-    @JsonProperty("id")
-    private Long id;
+//    TODO: itt valoszinuleg CSAK az aliast, emailt es a pixelArtEntityList-tet akarjuk majd
+//    TODO: for "my-profile/{uuid}"
+//    @JsonProperty("id")
+//    private Long id;
 
-    @JsonProperty("uuid")
-    private UUID uuid;
+//    @JsonProperty("uuid")
+//    private UUID uuid;
 
     @JsonProperty("alias")
     private String alias;
 
-    @JsonProperty("role")
-    private RoleEntity role;
+    @Email // Ensures that the email is in a valid format.
+    @NotNull // Means it is a required field.
+    @JsonProperty("user_email")
+    private String email;
+
+//    @JsonProperty("role")
+//    private RoleEntity role;
 
     @JsonProperty("pixelarts")
     private List<PixelArtSimpleDto> pixelArtEntityList;

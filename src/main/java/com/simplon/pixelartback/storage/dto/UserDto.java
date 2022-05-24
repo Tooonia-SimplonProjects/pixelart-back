@@ -19,11 +19,13 @@ import java.util.UUID;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class UserDto {
 
+//    TODO: ez a DTO lehet majd nem is fog kelleni?
+//    TODO: lehet, h az "id" sem kell!
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("uuid")
-    private UUID uuid;
+//    @JsonProperty("uuid")
+//    private UUID uuid;
 
     @JsonProperty("alias")
     private String alias;
@@ -37,11 +39,12 @@ public class UserDto {
     @JsonProperty("user_password")
     private String password;
 
-    @JsonProperty("role")
-    private RoleEntity role;
+//    @JsonProperty("role")
+//    private RoleEntity role;
 
-    @JsonProperty("pixelarts")
-    private List<PixelArtSimpleDto> pixelArtEntityList;
+//    @JsonProperty("pixelarts")
+//    private List<PixelArtSimpleDto> pixelArtEntityList;
+
 //    @JsonProperty("pixelarts")
 //    private List<PixelArtEntity> pixelArtEntityList;
 
