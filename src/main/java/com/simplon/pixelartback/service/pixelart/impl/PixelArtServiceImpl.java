@@ -16,6 +16,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //    TODO: if exception / error to handle, is it already at that level? Because can't just write those at Controller?!
@@ -26,7 +27,7 @@ import java.util.List;
 @Slf4j
 public class PixelArtServiceImpl implements PixelArtService {
 
-//    How to write my code?
+//    TODO: How to write my code?
 //    In "UserServiceImpl" : @Autowired private UserMapper usermapper; @Autowired private RoleDao roleDao;
 //    In "ProjectServiceImpl" : private final ProjectMapper projectMapper; private final ProjectDao projectDao;
 
@@ -53,7 +54,6 @@ public class PixelArtServiceImpl implements PixelArtService {
 //    }
     @Override
     public List<PixelArtDto> getAllPixelArt() throws EmptyResultDataAccessException { //TODO: good exception here?
-
         return pixelArtMapper.entitiesToDtos(pixelArtDao.findAll());
     }
 
@@ -77,6 +77,22 @@ public class PixelArtServiceImpl implements PixelArtService {
     @Override
     public PixelArtSimpleDto getSimplePixelArtById(Long id) {
         return pixelArtSimpleMapper.entityToDto(pixelArtDao.getPixelArtById(id));
+    }
+
+    @Override
+    public List<PixelArtDto> getAllPixelArtByUser(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id User is missing");
+        }
+        List<PixelArtDto> eixstingPixelartList = pixelArtMapper.entitiesToDtos(pixelArtDao.findAll());
+        List<PixelArtDto> pixelArtListByUser = new ArrayList<>();
+//        PixelArtDto p = new PixelArtDto();
+        for (PixelArtDto p : eixstingPixelartList) {
+            if (p.getUserEntity().getId().longValue() == id) {
+                pixelArtListByUser.add(p);
+            }
+        }
+        return pixelArtListByUser;
     }
 
     @Override

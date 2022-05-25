@@ -1,5 +1,6 @@
 package com.simplon.pixelartback.service.user.impl;
 
+import com.simplon.pixelartback.facade.security.PasswordHelper;
 import com.simplon.pixelartback.service.mapper.UserForPixelArtMapper;
 import com.simplon.pixelartback.service.mapper.UserGetMapper;
 import com.simplon.pixelartback.service.mapper.UserMapper;
@@ -9,10 +10,12 @@ import com.simplon.pixelartback.storage.dto.UserDto;
 import com.simplon.pixelartback.storage.dto.UserForPixelArtDto;
 import com.simplon.pixelartback.storage.dto.UserGetDto;
 import com.simplon.pixelartback.storage.entity.role.RoleEntity;
+import com.simplon.pixelartback.storage.entity.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -46,7 +49,9 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+//    @Lazy
+//    private PasswordEncoder passwordEncoder;
+    private PasswordHelper passwordHelper;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -72,24 +77,20 @@ public class UserServiceImpl implements UserService {
         return userGetMapper.entityToDto(userDao.getUserById(id));
     }
 
+//    TODO: kell: getMe(); <<< Retourne l'utilisateur connecté?
+
+//    TODO: source: UserServiceImpl
     @Override
-    public UserForPixelArtDto getUserForPixelArt(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("Id PixelArt is missing");
-        }
-        return userForPixelArtMapper.entityToDto(userDao.getUserById(id));
-    }
-
-//    TODO: kell: getMe(); <<< Retourne l'utilisateur connecté
-//    TODO: Valameyik methode-hoz kell az "email" cim is, amit sajat magam latok a "My Profile" ful alatt
-
-
-    @Override
-    public UserDto findByEmail(String email) {
+    public UserDto findByEmail(String email, boolean withPassword) {
         if (email == null) {
             throw new IllegalArgumentException("Email is missing");
         }
-        return userMapper.entityToDto(userDao.findByEmail(email));
+        UserEntity userEntity = userDao.findByEmail(email);
+        UserDto result = userMapper.entityToDto(userEntity);
+        if (result != null && withPassword) {
+            result.setPassword(userEntity.getPassword());
+        }
+        return result;
     }
 
     @Override
@@ -102,7 +103,8 @@ public class UserServiceImpl implements UserService {
         entity.setUuid(UUID.randomUUID());
         entity.setAlias(userDto.getAlias());
         entity.setEmail(userDto.getEmail());
-        entity.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        entity.setPassword(passwordHelper.encodePassword(userDto.getPassword()));
+//        entity.setPassword(passwordEncoder.encode(userDto.getPassword()));
 //        At that 1st phase of development, we only create Users with role "USER"
         entity.setRole(RoleEntity.USER);
         val savedEntity = userDao.save(entity);
@@ -110,15 +112,18 @@ public class UserServiceImpl implements UserService {
         return userMapper.entityToDto(savedEntity);
     }
 
+//    TODO: updateUser ha lesz idom!!! <<< /my-profile -ban akkor valtoztathatom az alias-t, password-ot!
+//    Kell hozza a valideEntity() method is! source: UserServiceImpl
+
     @Override
     @Transactional //(readOnly = false)
-    public void deleteUser(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("ID user missing");
+    public void deleteUser(UUID uuid) {
+        if (uuid == null) {
+            throw new IllegalArgumentException("UUID user missing");
         }
-        val existingEntity = userDao.getUserById(id);
+        val existingEntity = userDao.findByUuid(uuid);
         if (existingEntity == null) {
-            throw new IllegalArgumentException("User unknown : " + id);
+            throw new IllegalArgumentException("User unknown : " + uuid);
         }
 
         userDao.delete(existingEntity);
@@ -127,13 +132,24 @@ public class UserServiceImpl implements UserService {
     @Override
 //    TODO: no need for @Transactional, right?
     public void loginUser(UserDto userDto) throws Exception {
+        if(userDto == null) {
+            throw new IllegalArgumentException("User is obligatory");
+        }
+        val entity = userMapper.dtoToEntity(userDto);
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword()));
+                    new UsernamePasswordAuthenticationToken(entity.getEmail(), entity.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } catch (BadCredentialsException e) {
             throw new Exception("Invalid credentials");
         }
+//        try {
+//            authentication = authenticationManager.authenticate(
+//                    new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword()));
+//            SecurityContextHolder.getContext().setAuthentication(authentication);
+//        } catch (BadCredentialsException e) {
+//            throw new Exception("Invalid credentials");
+//        }
     }
 }

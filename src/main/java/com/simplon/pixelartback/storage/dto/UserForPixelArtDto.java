@@ -13,7 +13,8 @@ import java.util.UUID;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class UserForPixelArtDto {
 
-//    TODO: itt valszoninuleg CSAK az alias-t es a pixelArtEntityList-et akarjuk majd latni!
+//    TODO: valoszinuleg ez NEM KELL MAJD
+//     itt valszoninuleg CSAK az alias-t es a pixelArtEntityList-et akarjuk majd latni!
 //    TODO: ez lesz adott rajz alatt, ha valaki rakattint
     @JsonProperty("id")
     private Long id;

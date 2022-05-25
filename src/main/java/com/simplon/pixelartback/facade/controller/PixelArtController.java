@@ -27,7 +27,7 @@ public class PixelArtController {
 //    }
 
 //  READ / GET all (catalog)    GET /api/pixelart
-    @GetMapping("/pixelart")
+    @GetMapping("/pixelart-catalog")
 //    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) //TODO: correct/needed here?
     public ResponseEntity<List<PixelArtDto>> getAllPixelArt() throws Exception {
         return ResponseEntity.ok(pixelArtService.getAllPixelArt()); // As in "UserController / getAddresses"
@@ -55,9 +55,13 @@ public class PixelArtController {
 
 //  READ / GET all pixelArt of one particular User    GET  /api/pixelart/currentuser
 //    //    List<PixelArtDto> getPixelArtByUser(UserDto userDto); //TODO: correct? Complete when User is created!
+    @GetMapping("/pixelart-by-user")
+    public ResponseEntity<List<PixelArtDto>> getAllPixelArtByUser(Long id) throws Exception {
+        return ResponseEntity.ok(pixelArtService.getAllPixelArtByUser(id));
+    }
 
 //  CREATE an own pixelArt    POST  /api/pixelart
-    @PostMapping("/pixelart")
+    @PostMapping("/pixelart-create")
 //    TODO: very likely there will be 2 @param here : userId and pixelArtDto !!! <= line 91 UsersApi.java!
     public ResponseEntity<PixelArtDto> createPixelArt(@RequestBody PixelArtDto pixelArtDto) throws Exception {
         val createdPixelArtDto = pixelArtService.createPixelArt(pixelArtDto);
@@ -68,7 +72,7 @@ public class PixelArtController {
     }
 
 //    UPDATE one particular pixelArt   PUT  /api/pixelart/{id}
-    @PutMapping("/pixelart/{id}")
+    @PutMapping("/pixelart-edit/{id}")
 //    TODO: very likely there will be 2 @param here : userId and pixelArtDto !!! <= line 118 UsersApi.class!
     public ResponseEntity<PixelArtSimpleDto> updatePixelArt(@PathVariable(name = "id") Long id, @RequestBody PixelArtSimpleDto pixelArtSimpleDto) throws Exception {
         if(id.longValue() != pixelArtSimpleDto.getId().longValue()) {
@@ -81,7 +85,7 @@ public class PixelArtController {
     }
 
 //    DELETE one particular pixelArt    DELETE  /api/pixelart/{id_pixel_art}
-    @DeleteMapping("/pixelart/{id}")
+    @DeleteMapping("/pixelart-edit/{id}")
 //    TODO: will there be 2 @param here : userId and pixelArtDto !!! <= line 99 UsersController or just one like in line 83 of ProjectController?
     public ResponseEntity<Void> deletePixelArt(@PathVariable(name = "id") Long id) throws Exception {
         pixelArtService.deletePixelArt(id);

@@ -20,7 +20,7 @@ import java.util.UUID;
 public class UserDto {
 
 //    TODO: ez a DTO lehet majd nem is fog kelleni?
-//    TODO: lehet, h az "id" sem kell!
+//    TODO: lehet, h az "id" sem kell! Vagy uuid inkabb helyette?
     @JsonProperty("id")
     private Long id;
 

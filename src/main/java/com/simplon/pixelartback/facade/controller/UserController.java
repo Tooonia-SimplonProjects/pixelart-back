@@ -29,6 +29,7 @@ public class UserController {
     //  READ / GET all users    GET /api/users
     @GetMapping("/users")
 //    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) //TODO: correct/needed here?
+//    TODO: method only for Postman testing
     public ResponseEntity<List<UserGetDto>> getAllUsers() throws Exception {
         return ResponseEntity.ok(userService.getAllUsers()); // Accorting to model "UserController / getAddresses"
 //        TODO: other response status to set? @ResponsStatus, @ExceptionHandler, PixelArtApi to define with OpenAPI?
@@ -36,22 +37,22 @@ public class UserController {
     }
 
 //    READ / GET one user by Uuid, with detailed User information including email    GET /api/user/{uuid}
-    @GetMapping("/my-user/{uuid}")
+    @GetMapping("/my-profile/{uuid}")
     public ResponseEntity<UserDto> getUserByUuid(@PathVariable("uuid") UUID uuid) throws Exception {
+//        TODO: see if needed to compare uuid of parameter and entity!!!
         return ResponseEntity.ok(userService.getUserByUuid(uuid));
     }
 
     //    READ / GET one user by id    GET /api/user/{id}
     @GetMapping("/user/{id}")
     public ResponseEntity<UserGetDto> getUserById(@PathVariable("id") Long id) throws Exception {
+        //        TODO: see if needed to compare id of parameter and entity!!!
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    //    READ / GET one "simplified" user by id    GET /api/alias/{id}
-//    @GetMapping("/alias/{id}")
-//    public ResponseEntity<UserGetDto> getSimplifiedUserById(@PathVariable("id") Long id) throws Exception {
-//        return ResponseEntity.ok(userService.getUserById(id));
-//    }
+    //    GET one user by email    GET  /api/user  //TODO: url? es vegul kell ide kulon?
+
+
 
     //    CREATE one user     POST /api/user
     @PostMapping("/signup")
@@ -73,13 +74,13 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    // DELETE one user by id      DELETE  /api/user/{id}
+    // DELETE one user by id      DELETE  /api/my-profile/{id}
 //    @PreAuthorize("hasAnyRole('USER')")
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/my-profile/{uuid}")
     @RolesAllowed("USER")
 //    TODO: will there be 2 @param here : userId and pixelArtDto !!! <= line 99 UsersController or just one like in line 83 of ProjectController?
-    public ResponseEntity<Void> deleteUser(@PathVariable(name = "id") Long id) {
-        userService.deleteUser(id);
+    public ResponseEntity<Void> deleteUser(@PathVariable(name = "uuid") UUID uuid) {
+        userService.deleteUser(uuid);
         return ResponseEntity.ok().build();
     }
 }

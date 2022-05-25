@@ -17,7 +17,8 @@ public interface PixelArtService {
 
     PixelArtSimpleDto getSimplePixelArtById(Long id);
 
-//    List<PixelArtDto> getPixelArtByUser(UserDto userDto); //TODO: correct? or: (Long id); of "id"?
+    List<PixelArtDto> getAllPixelArtByUser(Long id);
+
     PixelArtDto createPixelArt(PixelArtDto pixelArtDto);
     PixelArtSimpleDto updatePixelArt(PixelArtSimpleDto pixelArtDto);
 //    void deletePixelArt(UUID uuid);

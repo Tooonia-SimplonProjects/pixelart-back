@@ -7,23 +7,22 @@ import com.simplon.pixelartback.storage.dto.UserGetDto;
 import java.util.List;
 import java.util.UUID;
 
-//    Focus on the creation of a new User (Sign-up), and on Login in the first phase of dev
+//    Focus on the creation of a new User (Signup), and on Login in the first phase of dev
 public interface UserService {
 
-//    Normally, all GET methods are configured with a simplified userDto, without password:
     List<UserGetDto> getAllUsers();
 
+//    For /my-profile, information with email (private access):
     UserDto getUserByUuid(UUID uuid);
 
+//    For listing the pixelart of one User (public access):
     UserGetDto getUserById(Long id);
 
-    UserForPixelArtDto getUserForPixelArt(Long id);
-
-    UserDto findByEmail(String email);
+    UserDto findByEmail(String email, boolean withPassword);
 
     UserDto createUser(UserDto userDto);
 
-    void deleteUser(Long id);
+    void deleteUser(UUID uuid);
 
     void loginUser(UserDto userDto) throws Exception;
 }

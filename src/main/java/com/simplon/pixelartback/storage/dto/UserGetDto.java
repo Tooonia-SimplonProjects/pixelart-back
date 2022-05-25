@@ -20,10 +20,10 @@ import java.util.UUID;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class UserGetDto {
 
-//    TODO: itt valoszinuleg CSAK az aliast, emailt es a pixelArtEntityList-tet akarjuk majd
-//    TODO: for "my-profile/{uuid}"
-//    @JsonProperty("id")
-//    private Long id;
+//    TODO: Dto for art of one User (itt valoszinuleg CSAK az aliast es a pixelArtEntityList-tet akarjuk majd)
+//    TODO: for "/api/user/{id}"
+    @JsonProperty("id")
+    private Long id;
 
 //    @JsonProperty("uuid")
 //    private UUID uuid;
@@ -31,10 +31,10 @@ public class UserGetDto {
     @JsonProperty("alias")
     private String alias;
 
-    @Email // Ensures that the email is in a valid format.
-    @NotNull // Means it is a required field.
-    @JsonProperty("user_email")
-    private String email;
+//    @Email // Ensures that the email is in a valid format.
+//    @NotNull // Means it is a required field.
+//    @JsonProperty("user_email")
+//    private String email;
 
 //    @JsonProperty("role")
 //    private RoleEntity role;

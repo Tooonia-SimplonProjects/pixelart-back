@@ -47,6 +47,7 @@ public class UserEntity implements Serializable {
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
 //    @JsonIgnore
+//    TODO: do I have to set for @OneToOne? If not, then modify the MPD pour dire: +eurs role is possible!
     private RoleEntity role;
 
 //    @Column(name = "language", nullable = false)

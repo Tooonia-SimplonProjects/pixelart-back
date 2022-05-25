@@ -10,7 +10,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-//@Data
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class PixelArtDto {
 
