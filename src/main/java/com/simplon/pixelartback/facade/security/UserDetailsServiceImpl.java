@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
-@Service
+@Service // TODO: no @ in Rudi!
 public class UserDetailsServiceImpl extends AbstractUserDetailsServiceImpl implements UserDetailsService {
 
 //    @Autowired

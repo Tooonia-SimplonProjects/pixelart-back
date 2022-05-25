@@ -3,6 +3,7 @@ package com.simplon.pixelartback.facade.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -11,14 +12,15 @@ import java.util.Base64;
 
 @Component
 public class PasswordHelper {
+    //    @Qualifier("userPasswordEncoder")
     @Autowired
-//    @Qualifier("userPasswordEncoder")
+    @Lazy
     private PasswordEncoder userPasswordEncoder;
 
 //    @Bean("userPasswordEncoder")
     @Bean
     public PasswordEncoder userPasswordEncoder() {
-        return new BCryptPasswordEncoder(4);
+        return new BCryptPasswordEncoder(8);
     }
 
     public String encodePassword(String password) {

@@ -5,6 +5,7 @@ import com.simplon.pixelartback.storage.dto.UserDto;
 import com.simplon.pixelartback.storage.dto.UserGetDto;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,7 @@ import java.util.UUID;
 public class UserController {
 
     @Autowired
+    @Lazy
     private UserService userService;
 
 

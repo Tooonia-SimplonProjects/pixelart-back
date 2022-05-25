@@ -7,6 +7,7 @@ import com.simplon.pixelartback.storage.entity.user.UserEntity;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,10 +30,11 @@ import java.util.ArrayList;
 public class AuthenticationProviderImpl extends AbstractUserDetailsServiceImpl implements AuthenticationProvider {
 
 //    @Autowired  //TODO: probablement pas nécessaire, puisque AbstractUserDetailsServiceImpl is autowired from SecurityConfig
-//    UserService userService; //TODO: ez volt kijelolve amugy. Vagy ezt beveszem, vagy az extends mukodik helyette
+//    UserService userService; //TODO: ez volt kijelolve amugy. Vagy ezt beveszem, vagy az "extends AbstractUserDetailsServiceImpl" mukodik helyette
 //    UserDao userDao;
 
     @Autowired
+    @Lazy
     PasswordEncoder passwordEncoder;
 
 //    Check credential and return authentication objet
