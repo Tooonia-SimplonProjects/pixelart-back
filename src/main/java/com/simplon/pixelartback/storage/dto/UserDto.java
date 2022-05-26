@@ -19,7 +19,6 @@ import java.util.UUID;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class UserDto {
 
-//    TODO: ez a DTO lehet majd nem is fog kelleni?
 //    TODO: lehet, h az "id" sem kell! Vagy uuid inkabb helyette?
     @JsonProperty("id")
     private Long id;
@@ -39,12 +38,14 @@ public class UserDto {
     @JsonProperty("user_password")
     private String password;
 
+    //    TODO: lehet, h kelleni fog a role?
 //    @JsonProperty("role")
 //    private RoleEntity role;
 
 //    @JsonProperty("pixelarts")
 //    private List<PixelArtSimpleDto> pixelArtEntityList;
 
+    //    TODO: lehet, h kelleni fog a lista?
 //    @JsonProperty("pixelarts")
 //    private List<PixelArtEntity> pixelArtEntityList;
 

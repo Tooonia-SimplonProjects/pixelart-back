@@ -1,17 +1,15 @@
 package com.simplon.pixelartback.facade.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 // Source: https://openclassrooms.com/fr/courses/5683681-secure-your-web-application-with-spring-security
@@ -24,15 +22,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableGlobalMethodSecurity(prePostEnabled = true) // enabling method level security
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-//    @Autowired
-//    private UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    @Lazy
+    private UserDetailsServiceImpl userDetailsService;
 
 //    We are also registering our custom AuthenticationProvider within this SecurityConfig class:
     @Autowired
     private AuthenticationProviderImpl authenticationProvider;
 
     @Autowired
-//    @Qualifier("userPasswordEncoder")
     private PasswordEncoder passwordEncoder;
 
 //    See: WebSecurityConfig class in "acl"
@@ -44,8 +42,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        that itself is using the UserDetailsService and the PasswordEncoder.
 //        To the ".userDetailsService()" method we are passing the custom "userDetailsService",
 //        And we also provide the password encoder.
-        auth.userDetailsService(userDetailsServiceBean()).passwordEncoder(passwordEncoder);
-//        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
+//        auth.userDetailsService(userDetailsServiceBean()).passwordEncoder(passwordEncoder);
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
 
 //        SECOND step of development: by using our own custom AuthenticationProvider:
         auth.authenticationProvider(authenticationProvider);
@@ -53,8 +51,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 //    The method we are using for the security filter chain, for customizing the HttpRequests.
 //    We are then running all the Http requests through the security filter chain.
-//    These requests need to go into the configure file so we can run our security
-//    filter chain ruleset on the requests, so we add it as parameter to the method.
+//    These requests need to go into the configure file, so we can run our security
+//    filter chain ruleset on the requests; we add it as parameter to the method.
 //    @Override means we want to run our ruleset, so overriding the normal Spring Security functions.
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -65,12 +63,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/api/users", "/api/user/{id}", "/api/signup", "/api/login",
                         "/api/pixelart-catalog", "/api/pixelart-simplelist", "/api/pixelart/{id}",
-                        "/api/pixelart-simple/{id}", "/api/pixelart-by-user").permitAll()
+                        "/api/pixelart-simple/{id}", "/api/pixelart-by-user/{id}").permitAll()
                 .antMatchers("/api/my-profile/{uuid}", "/api/pixelart-create",
                         "/api/pixelart-edit/{id}").authenticated()
-//                .antMatchers("/api/users", "/api/user", "/api/my-user/*").permitAll()
 //                .antMatchers( "/api/user/{id}").hasRole("USER")
-//                TODO: ha ezt aktivalom, atnezni, h a korabbi engedelyeket kiknek kell adnom!!! :(video 7, 4:21
+//                TODO: ha ezt a kov sort aktivalom, atnezni, h a korabbi engedelyeket kiknek kell adnom!!! :(video 7, 4:21
 //                .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -78,6 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic();
     }
 
+//    Did not manage to work with this @Bean declaration here, within that class!
 //    @Bean
 //    public PasswordEncoder passwordEncoder() {
 //        return new BCryptPasswordEncoder(8);
@@ -91,9 +89,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Override
-    @Bean
-    public UserDetailsService userDetailsServiceBean() throws Exception {
-        return new UserDetailsServiceImpl();
-    }
+//    Did not work either, needed the put back our own "UserDetailsServiceImpl"
+//    inside the "configure(AuthenticationManagerBuilder auth)" method!
+//    @Override
+//    @Bean
+//    public UserDetailsService userDetailsServiceBean() throws Exception {
+//        return new UserDetailsServiceImpl();
+//    }
 }

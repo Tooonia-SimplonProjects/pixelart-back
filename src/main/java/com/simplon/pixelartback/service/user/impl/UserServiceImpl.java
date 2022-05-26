@@ -7,7 +7,6 @@ import com.simplon.pixelartback.service.mapper.UserMapper;
 import com.simplon.pixelartback.service.user.UserService;
 import com.simplon.pixelartback.storage.dao.UserDao;
 import com.simplon.pixelartback.storage.dto.UserDto;
-import com.simplon.pixelartback.storage.dto.UserForPixelArtDto;
 import com.simplon.pixelartback.storage.dto.UserGetDto;
 import com.simplon.pixelartback.storage.entity.role.RoleEntity;
 import com.simplon.pixelartback.storage.entity.user.UserEntity;
@@ -15,14 +14,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -112,8 +109,8 @@ public class UserServiceImpl implements UserService {
         return userMapper.entityToDto(savedEntity);
     }
 
-//    TODO: updateUser ha lesz idom!!! <<< /my-profile -ban akkor valtoztathatom az alias-t, password-ot!
-//    Kell hozza a valideEntity() method is! source: UserServiceImpl
+//    TODO: updateUser ha lesz idom!!! <<< /my-profile -ban akkor valtoztathatom az alias-t,
+//     password-ot! Kell hozza a valideEntity() method is! source: UserServiceImpl
 
     @Override
     @Transactional //(readOnly = false)

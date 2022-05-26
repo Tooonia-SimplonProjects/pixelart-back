@@ -1,13 +1,12 @@
 package com.simplon.pixelartback.service.user;
 
 import com.simplon.pixelartback.storage.dto.UserDto;
-import com.simplon.pixelartback.storage.dto.UserForPixelArtDto;
 import com.simplon.pixelartback.storage.dto.UserGetDto;
 
 import java.util.List;
 import java.util.UUID;
 
-//    Focus on the creation of a new User (Signup), and on Login in the first phase of dev
+//    Focus on the creation of a new User (Signup), and on Login during the first phase of dev
 public interface UserService {
 
     List<UserGetDto> getAllUsers();

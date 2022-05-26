@@ -108,6 +108,7 @@ public class PixelArtServiceImpl implements PixelArtService {
 //    TODO: val userEntity? and operation on it, something of that kind:
 //        val userEntity = userDao.getById(pixelArtDto.getUserEntity().getId());
 //        if(userEntity == null) {}
+//        TODO: exception: if User details contained in the pixelArtDto are not identical to the real User details (but probably only an inssue while testing in PostMan!
 
 //        TODO: why not set/map all the parameters here? according to Dto's values? (getProductImage() does not even exist on pixelArtDto!)
         val savedEntity = pixelArtDao.save(entity);

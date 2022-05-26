@@ -13,9 +13,8 @@ import java.util.UUID;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class UserForPixelArtDto {
 
-//    TODO: valoszinuleg ez NEM KELL MAJD
-//     itt valszoninuleg CSAK az alias-t es a pixelArtEntityList-et akarjuk majd latni!
-//    TODO: ez lesz adott rajz alatt, ha valaki rakattint
+//     TODO: ez a UserDto, amit a "create" pixelartnal hasznalunk! Itt valoszinuleg eleg lesz egy azonosito: id/uuid/email/alias (ez utobbi talan a legkevesbe, mert valtozhat!)
+//      Es leheet, h kell egy kulon, ami csak az alias-t es a pixelArtEntityList-et tartalmazza!!!, arra, ha adott rajz alatt kiirjuk/rakattint valaki.
     @JsonProperty("id")
     private Long id;
 

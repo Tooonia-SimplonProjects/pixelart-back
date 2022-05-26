@@ -1,7 +1,6 @@
 package com.simplon.pixelartback.service.mapper;
 
 import com.simplon.pixelartback.storage.dto.UserDto;
-import com.simplon.pixelartback.storage.dto.UserGetDto;
 import com.simplon.pixelartback.storage.entity.user.UserEntity;
 import org.mapstruct.*;
 
@@ -12,7 +11,6 @@ import java.util.List;
 public interface UserMapper extends AbstractMapper<UserEntity, UserDto> {
 
     @Override
-    @InheritInverseConfiguration
     UserEntity dtoToEntity(UserDto dto);
 
     @Override

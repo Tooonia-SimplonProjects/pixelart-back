@@ -55,14 +55,15 @@ public class PixelArtController {
 
 //  READ / GET all pixelArt of one particular User    GET  /api/pixelart/currentuser
 //    //    List<PixelArtDto> getPixelArtByUser(UserDto userDto); //TODO: correct? Complete when User is created!
-    @GetMapping("/pixelart-by-user")
-    public ResponseEntity<List<PixelArtDto>> getAllPixelArtByUser(Long id) throws Exception {
+    @GetMapping("/pixelart-by-user/{id}")
+    public ResponseEntity<List<PixelArtDto>> getAllPixelArtByUser(@PathVariable("id") Long id) throws Exception {
         return ResponseEntity.ok(pixelArtService.getAllPixelArtByUser(id));
     }
 
 //  CREATE an own pixelArt    POST  /api/pixelart
     @PostMapping("/pixelart-create")
 //    TODO: very likely there will be 2 @param here : userId and pixelArtDto !!! <= line 91 UsersApi.java!
+//    TODO: ide a PixelArtDto-ban levo UserForPixelArtDto-ban valoszinuleg csak 1 azonosito kell majd: id/uuid/emai/alias!!!
     public ResponseEntity<PixelArtDto> createPixelArt(@RequestBody PixelArtDto pixelArtDto) throws Exception {
         val createdPixelArtDto = pixelArtService.createPixelArt(pixelArtDto);
         val location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -75,6 +76,8 @@ public class PixelArtController {
     @PutMapping("/pixelart-edit/{id}")
 //    TODO: very likely there will be 2 @param here : userId and pixelArtDto !!! <= line 118 UsersApi.class!
     public ResponseEntity<PixelArtSimpleDto> updatePixelArt(@PathVariable(name = "id") Long id, @RequestBody PixelArtSimpleDto pixelArtSimpleDto) throws Exception {
+//        TODO: valoszinuleg a PixelArtServiceImpl-ben kell elvegezni ezeket a vérification-okat!!
+//         Illetve; Rudi-ban hol tortenik ez a vérif? Nem latom se a Controller-ben, se a ServiceImpl-ben!!!
         if(id.longValue() != pixelArtSimpleDto.getId().longValue()) {
             throw new IllegalArgumentException("Id in URL " + id + " does not match the id of of current pixelArt : " + pixelArtSimpleDto.getId()
                     + "PixelArt id can not be updated.");
