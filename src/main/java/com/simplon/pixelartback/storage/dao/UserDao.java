@@ -14,4 +14,6 @@ public interface UserDao extends JpaRepository<UserEntity, Long> {
 
 //    TODO: talan Optional<UserEntity> findByAlias(String alias);
     UserEntity findByEmail(String email);
+
+    UserEntity findByAlias(String alias);
 }

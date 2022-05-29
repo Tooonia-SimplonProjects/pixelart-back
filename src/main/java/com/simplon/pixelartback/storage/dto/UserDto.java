@@ -39,8 +39,8 @@ public class UserDto {
     private String password;
 
     //    TODO: lehet, h kelleni fog a role?
-//    @JsonProperty("role")
-//    private RoleEntity role;
+    @JsonProperty("role")
+    private RoleEntity role;
 
 //    @JsonProperty("pixelarts")
 //    private List<PixelArtSimpleDto> pixelArtEntityList;

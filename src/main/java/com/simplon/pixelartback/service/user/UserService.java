@@ -23,5 +23,7 @@ public interface UserService {
 
     void deleteUser(UUID uuid);
 
-    void loginUser(UserDto userDto) throws Exception;
+//    void loginUser(UserDto userDto) throws Exception;
+
+    UserDto findByAlias(String alias);
 }

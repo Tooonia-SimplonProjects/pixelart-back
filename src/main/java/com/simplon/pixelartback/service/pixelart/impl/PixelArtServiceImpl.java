@@ -102,14 +102,7 @@ public class PixelArtServiceImpl implements PixelArtService {
             throw new IllegalArgumentException("PixelArt is obligatory");
         }
 //      Using Lombok 'val' declares the variable as final and automatically infers the type after initializing it:
-        val entity = pixelArtMapper.dtoToEntity(pixelArtDto); // Meaning/utility of 'processor' in ProjectServiceImpl?
-//        entity.setIdPixelArt(pixelArtDto.getUuidPixelArt());
-//        entity.setUuid(UUID.randomUUID());
-//    TODO: val userEntity? and operation on it, something of that kind:
-//        val userEntity = userDao.getById(pixelArtDto.getUserEntity().getId());
-//        if(userEntity == null) {}
-//        TODO: exception: if User details contained in the pixelArtDto are not identical to the real User details (but probably only an inssue while testing in PostMan!
-
+        val entity = pixelArtMapper.dtoToEntity(pixelArtDto); // TODO: Meaning/utility of 'processor' in ProjectServiceImpl?
 //        TODO: why not set/map all the parameters here? according to Dto's values? (getProductImage() does not even exist on pixelArtDto!)
         val savedEntity = pixelArtDao.save(entity);
 

@@ -6,6 +6,7 @@ import com.simplon.pixelartback.storage.dto.PixelArtSimpleDto;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -14,11 +15,10 @@ import java.util.List;
 @RestController
 //@RequiredArgsConstructor //TODO: needed here?
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 public class PixelArtController {
 
     @Autowired
-//    In UserController it is with @Autowired, but alert message: "Field injection is not recommended ???
     private PixelArtService pixelArtService;
 
 //    public PixelArtController(PixelArtService pixelArtService) {
@@ -62,6 +62,8 @@ public class PixelArtController {
 
 //  CREATE an own pixelArt    POST  /api/pixelart
     @PostMapping("/pixelart-create")
+    @PreAuthorize("hasAnyRole('USER')")
+//    @PreAuthorize("isAuthenticated()") // TODO: Probably double definition with SecurityContext!!!
 //    TODO: very likely there will be 2 @param here : userId and pixelArtDto !!! <= line 91 UsersApi.java!
 //    TODO: ide a PixelArtDto-ban levo UserForPixelArtDto-ban valoszinuleg csak 1 azonosito kell majd: id/uuid/emai/alias!!!
     public ResponseEntity<PixelArtDto> createPixelArt(@RequestBody PixelArtDto pixelArtDto) throws Exception {
@@ -74,6 +76,7 @@ public class PixelArtController {
 
 //    UPDATE one particular pixelArt   PUT  /api/pixelart/{id}
     @PutMapping("/pixelart-edit/{id}")
+    @PreAuthorize("hasAnyRole('USER')")
 //    TODO: very likely there will be 2 @param here : userId and pixelArtDto !!! <= line 118 UsersApi.class!
     public ResponseEntity<PixelArtSimpleDto> updatePixelArt(@PathVariable(name = "id") Long id, @RequestBody PixelArtSimpleDto pixelArtSimpleDto) throws Exception {
 //        TODO: valoszinuleg a PixelArtServiceImpl-ben kell elvegezni ezeket a vérification-okat!!
@@ -89,6 +92,7 @@ public class PixelArtController {
 
 //    DELETE one particular pixelArt    DELETE  /api/pixelart/{id_pixel_art}
     @DeleteMapping("/pixelart-edit/{id}")
+    @PreAuthorize("hasAnyRole('USER')")
 //    TODO: will there be 2 @param here : userId and pixelArtDto !!! <= line 99 UsersController or just one like in line 83 of ProjectController?
     public ResponseEntity<Void> deletePixelArt(@PathVariable(name = "id") Long id) throws Exception {
         pixelArtService.deletePixelArt(id);

@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -50,8 +51,8 @@ public class UserServiceImpl implements UserService {
 //    private PasswordEncoder passwordEncoder;
     private PasswordHelper passwordHelper;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+//    @Autowired
+//    private AuthenticationManager authenticationManager;
 
     @Override
     public List<UserGetDto> getAllUsers() throws EmptyResultDataAccessException {
@@ -89,6 +90,15 @@ public class UserServiceImpl implements UserService {
         }
         return result;
     }
+    @Override
+    public UserDto findByAlias(String alias) {
+        if (alias == null) {
+            throw new IllegalArgumentException("Alias is missing");
+        }
+        UserEntity userEntity = userDao.findByAlias(alias);
+
+        return userMapper.entityToDto(userEntity);
+    }
 
     @Override
     @Transactional //(readOnly = false) is the default
@@ -100,12 +110,14 @@ public class UserServiceImpl implements UserService {
         entity.setUuid(UUID.randomUUID());
         entity.setAlias(userDto.getAlias());
         entity.setEmail(userDto.getEmail());
-        entity.setPassword(passwordHelper.encodePassword(userDto.getPassword()));
+        if (!userDto.getPassword().isEmpty()) {
+            entity.setPassword(passwordHelper.encodePassword(userDto.getPassword()));
+        }
 //        entity.setPassword(passwordEncoder.encode(userDto.getPassword()));
 //        At that 1st phase of development, we only create Users with role "USER"
         entity.setRole(RoleEntity.USER);
         val savedEntity = userDao.save(entity);
-
+//        System.out.println(entity.getRole()); <<< right value here : USER
         return userMapper.entityToDto(savedEntity);
     }
 
@@ -122,31 +134,27 @@ public class UserServiceImpl implements UserService {
         if (existingEntity == null) {
             throw new IllegalArgumentException("User unknown : " + uuid);
         }
-
-        userDao.delete(existingEntity);
+//        TODO: does not work when @PreAuthorize("hasAnyRole('USER')") on method in Controller:
+//        if (existingEntity.getRole().toString() == "USER") {
+//        if (Objects.equals(existingEntity.getRole().toString(), "USER")) {
+            userDao.delete(existingEntity);
+//        }
     }
 
-    @Override
-//    TODO: no need for @Transactional, right?
-    public void loginUser(UserDto userDto) throws Exception {
-        if(userDto == null) {
-            throw new IllegalArgumentException("User is obligatory");
-        }
-        val entity = userMapper.dtoToEntity(userDto);
-        Authentication authentication;
-        try {
-            authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(entity.getEmail(), entity.getPassword()));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (BadCredentialsException e) {
-            throw new Exception("Invalid credentials");
-        }
+//    @Override
+////    TODO: no need for @Transactional, right?
+//    public void loginUser(UserDto userDto) throws Exception {
+//        if(userDto == null) {
+//            throw new IllegalArgumentException("User is obligatory");
+//        }
+//        val entity = userMapper.dtoToEntity(userDto);
+//        Authentication authentication;
 //        try {
 //            authentication = authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword()));
+//                    new UsernamePasswordAuthenticationToken(entity.getEmail(), entity.getPassword()));
 //            SecurityContextHolder.getContext().setAuthentication(authentication);
 //        } catch (BadCredentialsException e) {
 //            throw new Exception("Invalid credentials");
 //        }
-    }
+//    }
 }

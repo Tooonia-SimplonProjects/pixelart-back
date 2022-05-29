@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -20,7 +21,7 @@ import java.util.UUID;
 @RestController
 //@RequiredArgsConstructor //TODO: needed here?
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:4200")
+//@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
 
     @Autowired
@@ -38,8 +39,10 @@ public class UserController {
 //        TODO: request.getHeader("Accept"), MediaType/valueOf("application/json"), response... <= needed here these elements like in UsersApi?
     }
 
-//    READ / GET one user by Uuid, with detailed User information including email    GET /api/user/{uuid}
+//    READ / GET one user by Uuid, with detailed User information including email (private access)   GET /api/user/{uuid}
     @GetMapping("/my-profile/{uuid}")
+    @PreAuthorize("hasAnyRole('USER')")
+//    @PreAuthorize("isAuthenticated()") //TODO: probably en double!
     public ResponseEntity<UserDto> getUserByUuid(@PathVariable("uuid") UUID uuid) throws Exception {
 //        TODO: see if needed to compare uuid of parameter and entity!!!
         return ResponseEntity.ok(userService.getUserByUuid(uuid));
@@ -70,19 +73,20 @@ public class UserController {
         return ResponseEntity.created(location).body(createdUserDto);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<Void> loginUser(@RequestBody UserDto userDto) throws Exception {
-        userService.loginUser(userDto);
-        return ResponseEntity.ok().build();
-    }
-
     // DELETE one user by id      DELETE  /api/my-profile/{id}
 //    @PreAuthorize("hasAnyRole('USER')")
     @DeleteMapping("/my-profile/{uuid}")
-    @RolesAllowed("USER")
+    @PreAuthorize("hasAnyRole('USER')")
+//    @PreAuthorize("isAuthenticated()")
 //    TODO: will there be 2 @param here : userId and pixelArtDto !!! <= line 99 UsersController or just one like in line 83 of ProjectController?
     public ResponseEntity<Void> deleteUser(@PathVariable(name = "uuid") UUID uuid) {
         userService.deleteUser(uuid);
         return ResponseEntity.ok().build();
     }
+
+//    @PostMapping("/login")
+//    public ResponseEntity<Void> loginUser(@RequestBody UserDto userDto) throws Exception {
+//        userService.loginUser(userDto);
+//        return ResponseEntity.ok().build();
+//    }
 }

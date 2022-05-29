@@ -16,6 +16,7 @@ public interface UserMapper extends AbstractMapper<UserEntity, UserDto> {
     @Override
 //    TODO:  elvileg ide is kell  ez a @Mapping: source: UserFullMapper
     @Mapping(target = "password", source = "password", ignore = true)
+//    @Mapping(target = "role", source = "role") // TODO: bizarre: hirtelen megy nelkuluk is! Adding this helped to visualize the role value, instead of "null" (eleg lenne az egyikhez, de jobb mindket helyen)
     void dtoToEntity(UserDto dto, @MappingTarget UserEntity entity);
 
 //    TODO: elvileg no need for this
@@ -25,6 +26,7 @@ public interface UserMapper extends AbstractMapper<UserEntity, UserDto> {
 //    By the @Mapping ignore=true, we are protecting the password
     @Override
     @Mapping(target = "password", source = "password", ignore = true)
+//    @Mapping(target = "role", source = "role") //TODO: miert megy nelkule hirtelen? Adding this helped to visualize the role value, instead of "null"
     UserDto entityToDto(UserEntity entity);
 
     //    TODO: elvileg no need for this
