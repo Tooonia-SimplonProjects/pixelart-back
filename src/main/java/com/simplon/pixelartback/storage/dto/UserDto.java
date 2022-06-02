@@ -23,8 +23,8 @@ public class UserDto {
     @JsonProperty("id")
     private Long id;
 
-//    @JsonProperty("uuid")
-//    private UUID uuid;
+    @JsonProperty("uuid")
+    private UUID uuid;
 
     @JsonProperty("alias")
     private String alias;

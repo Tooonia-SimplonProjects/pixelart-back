@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-//@RequestMapping("/api")
+@RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:4200")
 public class JwtController {
 
@@ -14,8 +14,10 @@ public class JwtController {
     private JwtService jwtService;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<JwtResponse> createJwtToken(@RequestBody JwtRequest jwtRequest) throws Exception {
-        return ResponseEntity.ok(jwtService.createJwtToken(jwtRequest));
+    public ResponseEntity<JwtResponse> authenticateUser(@RequestBody JwtRequest jwtRequest) throws Exception {
+        return ResponseEntity.ok(jwtService.authenticateUser(jwtRequest));
+//    public ResponseEntity<JwtResponse> createJwtToken(@RequestBody JwtRequest jwtRequest) throws Exception {
+//        return ResponseEntity.ok(jwtService.createJwtToken(jwtRequest));
 //    public ResponseEntity<JwtResponse> createJwtToken(@RequestBody UserDto userDto) throws Exception {
 //        return ResponseEntity.ok(jwtService.createJwtToken(userDto));
     }

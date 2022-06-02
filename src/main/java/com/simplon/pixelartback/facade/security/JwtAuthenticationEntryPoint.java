@@ -10,11 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-//Class responsible for authenticating the JWT Token. If authentication fails,
-//the application throws the "Unauthorized" error.
-@Component
+/**
+ * Class responsible for authenticating the JWT Token. If authentication fails,
+ * the application throws the "Unauthorized" error.
+ */
 //@EnableWebSecurity
 //@EnableGlobalMethodSecurity(prePostEnabled = true)
+ @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException {

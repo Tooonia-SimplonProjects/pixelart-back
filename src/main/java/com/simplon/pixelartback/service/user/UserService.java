@@ -15,7 +15,14 @@ public interface UserService {
     UserDto getUserByUuid(UUID uuid);
 
 //    For listing the pixelart of one User (public access):
-    UserGetDto getUserById(Long id);
+    UserDto getUserById(Long id);
+//    UserGetDto getUserById(Long id);
+
+    /**
+     * GET the connected user
+     * @return
+     */
+    UserDto getMe();
 
     UserDto findByEmail(String email, boolean withPassword);
 

@@ -32,19 +32,19 @@ import lombok.val;
 
 //@Component
 public class AuthenticationProviderImpl  {
-
-//    @Autowired
-//    @Lazy
-//    UserService userService;
-
+//
+////    @Autowired
+////    @Lazy
+////    UserService userService;
+//
 //    @Autowired
 //    UserMapper userMapper;
 //
 //    @Autowired
 //    @Lazy
 //    PasswordEncoder passwordEncoder;
-
-//    Check credential and return authentication objet
+//
+////    Check credential and return authentication objet
 //    @Override
 //    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 ////        First we are having the email and password of the "authentication" object:
@@ -55,10 +55,11 @@ public class AuthenticationProviderImpl  {
 //            throw new UsernameNotFoundException("User were not found");
 //        }
 //        UserDto user = getUserService().findByEmail(email, true);
-//        val entity = userMapper.dtoToEntity(user);
+////        val entity = userMapper.dtoToEntity(user);
 ////        We also need to compare the passwords:
 ////        1st parameter is the raw password, the 2nd is the encoded one
-//        if(passwordEncoder.matches(password, entity.getPassword())) {
+//        if(passwordEncoder.matches(password, user.getPassword())) {
+////        if(passwordEncoder.matches(password, entity.getPassword())) {
 ////            If above condition is satisfied, then we return the Authentication Object,
 ////            the implementation of which is the "UsernamePasswordAuthenticationToken".
 ////            Parameters of the method: (Object principle, Object credentials, authorities) = email, password, authorities

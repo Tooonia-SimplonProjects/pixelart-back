@@ -94,13 +94,15 @@
 			<version>2.3.1</version>
 		</dependency>
 
-<!--	Or: 	https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt
+		<!-- https://mvnrepository.com/artifact/com.nimbusds/nimbus-jose-jwt -->
+		<!-- Java library for Javascript Object Signing and Encryption (JOSE) and JSON Web Tokens (JWT)	-->
 		<dependency>
 			<groupId>com.nimbusds</groupId>
 			<artifactId>nimbus-jose-jwt</artifactId>
-			<version>9.22</version>
+			<version>9.23</version>
 		</dependency>
-		-->
+
+
 
 		<dependency>
 			<groupId>org.mapstruct</groupId>

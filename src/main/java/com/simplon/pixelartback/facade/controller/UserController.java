@@ -4,6 +4,8 @@ import com.simplon.pixelartback.service.user.UserService;
 import com.simplon.pixelartback.storage.dto.UserDto;
 import com.simplon.pixelartback.storage.dto.UserGetDto;
 import lombok.val;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ import java.util.UUID;
 //@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
     @Autowired
     @Lazy
     private UserService userService;
@@ -39,7 +42,7 @@ public class UserController {
 //        TODO: request.getHeader("Accept"), MediaType/valueOf("application/json"), response... <= needed here these elements like in UsersApi?
     }
 
-//    READ / GET one user by Uuid, with detailed User information including email (private access)   GET /api/user/{uuid}
+//    READ / GET one user by Uuid, with detailed User information including email (protected access)   GET /api/user/{uuid}
     @GetMapping("/my-profile/{uuid}")
     @PreAuthorize("hasAnyRole('USER')")
 //    @PreAuthorize("isAuthenticated()") //TODO: probably en double!
@@ -50,13 +53,18 @@ public class UserController {
 
     //    READ / GET one user by id    GET /api/user/{id}
     @GetMapping("/user/{id}")
-    public ResponseEntity<UserGetDto> getUserById(@PathVariable("id") Long id) throws Exception {
+    public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long id) throws Exception {
+//    public ResponseEntity<UserGetDto> getUserById(@PathVariable("id") Long id) throws Exception {
         //        TODO: see if needed to compare id of parameter and entity!!!
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
-    //    GET one user by email    GET  /api/user  //TODO: url? es vegul kell ide kulon?
-
+    //    GET the user profile of the connected user by email (getMe)   GET  /api/user/me
+    @GetMapping("/user/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UserDto> getMe() throws Exception {
+        return ResponseEntity.ok(userService.getMe());
+    }
 
 
     //    CREATE one user     POST /api/user

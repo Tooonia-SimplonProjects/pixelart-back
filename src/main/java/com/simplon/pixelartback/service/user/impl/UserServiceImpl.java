@@ -1,5 +1,7 @@
 package com.simplon.pixelartback.service.user.impl;
 
+import com.simplon.pixelartback.facade.security.AuthenticatedUser;
+import com.simplon.pixelartback.facade.security.ContextHelperUtil;
 import com.simplon.pixelartback.facade.security.PasswordHelper;
 import com.simplon.pixelartback.service.mapper.UserForPixelArtMapper;
 import com.simplon.pixelartback.service.mapper.UserGetMapper;
@@ -54,6 +56,9 @@ public class UserServiceImpl implements UserService {
 //    @Autowired
 //    private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private ContextHelperUtil contextHelperUtil;
+
     @Override
     public List<UserGetDto> getAllUsers() throws EmptyResultDataAccessException {
         return userGetMapper.entitiesToDtos(userDao.findAll());
@@ -64,20 +69,41 @@ public class UserServiceImpl implements UserService {
         if(uuid == null) {
             throw new IllegalArgumentException("UUID User is missing");
         }
-        return userMapper.entityToDto(userDao.findByUuid(uuid));
+        AuthenticatedUser authenticatedUser = contextHelperUtil.getAuthenticatedUser();
+        if (authenticatedUser != null) {
+            if (authenticatedUser.getUuid() == uuid) {
+                return userMapper.entityToDto(userDao.findByUuid(uuid));
+            } else {
+                throw new IllegalArgumentException("Not authorized, UUID is not the same");
+            }
+//            UserEntity authenticated = userDao.findByEmail(authenticatedUser.getEmail());
+//            UserDto authenticated = findByEmail(authenticatedUser.getEmail(), false);
+//            UserDto current = userMapper.entityToDto(userDao.findByUuid(uuid));
+        }
+        return null;
+//        if(uuid == null) {
+//            throw new IllegalArgumentException("UUID User is missing");
+//        }
+//        return userMapper.entityToDto(userDao.findByUuid(uuid));
     }
 
     @Override
-    public UserGetDto getUserById(Long id) {
+    public UserDto getUserById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Id PixelArt is missing");
         }
-        return userGetMapper.entityToDto(userDao.getUserById(id));
+        return userMapper.entityToDto(userDao.getUserById(id));
     }
 
-//    TODO: kell: getMe(); <<< Retourne l'utilisateur connecté?
-
-//    TODO: source: UserServiceImpl
+    @Override
+    public UserDto getMe() {
+        AuthenticatedUser authenticatedUser = contextHelperUtil.getAuthenticatedUser();
+        if (authenticatedUser != null) {
+            return findByEmail(authenticatedUser.getEmail(), false);
+        }
+        return null;
+    }
+// Does not have a separate endpoint in the UserController, only helps here in this UserServiceImpl class.
     @Override
     public UserDto findByEmail(String email, boolean withPassword) {
         if (email == null) {
