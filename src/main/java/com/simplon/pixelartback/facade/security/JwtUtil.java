@@ -4,13 +4,14 @@ import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  *  Our custom class providing utility methods for managing tokens, like generating, validating, and more.
@@ -80,9 +81,15 @@ public String generateToken(AuthenticatedUser authenticatedUser) {
         return Long.parseLong(claims.getSubject());
     }
 
+
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken);
+//    public JwtTokenData validateToken(String authToken) {
+//        final JwtTokenData token = new JwtTokenData();
+//        try {
+//            token.setToken(authToken);
+//            Jws<Claims> jwtSigned = Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken);
 
         } catch (SignatureException ex) {
             LOGGER.error("Invalid JWT signature");
@@ -106,5 +113,18 @@ public String generateToken(AuthenticatedUser authenticatedUser) {
         }
 
         return true;
+    }
+
+    /**
+     * Return the jwt authorities claim encapsulated within the token
+     */
+    public List<GrantedAuthority> getAuthoritiesFromJWT(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(secret)
+                .parseClaimsJws(token)
+                .getBody();
+        return Arrays.stream(claims.get("authorities").toString().split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 }

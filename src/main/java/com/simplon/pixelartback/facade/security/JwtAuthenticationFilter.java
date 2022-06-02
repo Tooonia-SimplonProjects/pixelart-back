@@ -27,6 +27,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Filter class extending OncePerRequestFilter reposible for retrieving information about the eventual
+ * connected User from the HttpServletRequest request Header.
+ * If the token of the Header has been validated,
+ */
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
@@ -73,9 +78,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             System.out.println("Jwt token does not start with Bearer");
         }
 
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            final JwtTokenData authentJtd = new JwtTokenData();
-            final var authenticatedUser = mapper.convertValue(authentJtd.getAccount(), AuthenticatedUser.class);
+        if (userEmail != null && jwtUtil.validateToken(jwtToken) && SecurityContextHolder.getContext().getAuthentication() == null) {
+//        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+//            Retrieve information from the token and validate it in the same time:
+            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+            final var authenticatedUser = mapper.convertValue(userDetails.getUsername(), AuthenticatedUser.class);
+            List<GrantedAuthority> authorities = jwtUtil.getAuthoritiesFromJWT(jwtToken);
+//            TODO: kell ez a kovetkezo sor? vagy duplicate a SecurityContext-be valo beirasa?
             contextHelperUtil.setAuthenticatedUser(authenticatedUser);
 //            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail); //TODO: valszeg ez a UserDetailsServiceImpl class-om lesz?!, "email"-lel
 //            UserDetails userDetails = jwtService.loadUserByUsername(userEmail); //TODO: valszeg ez a UserDetailsServiceImpl class-om lesz?!, "email"-lel
@@ -83,14 +92,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //  that will verify that the user email matches and the token has not expired:
             if (jwtUtil.generateToken(authenticatedUser) != null) {
 //                TODO: mier "null" a password?
-                List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-                if (!CollectionUtils.isEmpty(Collections.singleton(authenticatedUser.getRole()))) {
-                    grantedAuthorities.add(new SimpleGrantedAuthority(authenticatedUser.getRole().toString()));
-                }
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authenticatedUser.getEmail(), null, grantedAuthorities);
+//                List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+//                if (!CollectionUtils.isEmpty(Collections.singleton(authenticatedUser.getRole()))) {
+//                    grantedAuthorities.add(new SimpleGrantedAuthority(Collections.singleton(authenticatedUser.getRole()).toString()));
+//                }
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authenticatedUser.getEmail(), null, authorities);
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
+        } else {
+            LOGGER.warn("JWT authentication failed");
         }
 //        TODO: nem ertem pontosan (source: JwtRequestFilter):
 //         "Si un token d'authent a expiré ou qu'on a refresh le token on doit bloquer la chaîne de filtres"

@@ -1,5 +1,6 @@
 package com.simplon.pixelartback.facade.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.simplon.pixelartback.service.mapper.UserMapper;
 import com.simplon.pixelartback.service.user.UserService;
 import com.simplon.pixelartback.storage.dto.UserDto;
@@ -38,6 +39,11 @@ public class JwtService extends AbstractDetailServiceImpl { //TODO: jo otlet-e e
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    ContextHelperUtil contextHelperUtil;
+
+    private final ObjectMapper mapper = new ObjectMapper();
 
     public JwtResponse createJwtToken(AuthenticatedUser authenticatedUser) throws Exception{
 //    public JwtResponse createJwtToken(JwtRequest jwtRequest) throws Exception{
@@ -91,7 +97,10 @@ public JwtResponse authenticateUser(JwtRequest jwtRequest) throws Exception {
 //                    new UsernamePasswordAuthenticationToken(entity.getEmail(), entity.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            AuthenticatedUser authenticatedUser = (AuthenticatedUser) authentication.getPrincipal();
+            AuthenticatedUser authenticatedUser = mapper.convertValue(authentication.getPrincipal(), AuthenticatedUser.class);
+//            final var authenticatedUser = mapper.convertValue(authentJtd.getAccount(), AuthenticatedUser.class);
+//            contextHelperUtil.setAuthenticatedUser((AuthenticatedUser) authentication.getPrincipal());
+//            AuthenticatedUser authenticatedUser = (AuthenticatedUser) authentication.getPrincipal();
             return createJwtToken(authenticatedUser);
         } catch (BadCredentialsException e) {
             throw new Exception("Invalid credentials: incorrect email or password", e);

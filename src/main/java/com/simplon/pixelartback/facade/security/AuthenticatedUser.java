@@ -1,27 +1,30 @@
 package com.simplon.pixelartback.facade.security;
 
-import com.simplon.pixelartback.storage.dto.UserDto;
 import com.simplon.pixelartback.storage.entity.role.RoleEntity;
 import com.simplon.pixelartback.storage.entity.user.UserEntity;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
+/**
+ * The class we use to work with the Security and authentication/authorization of a User
+ */
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-//public class AuthenticatedUser  {
-public class AuthenticatedUser extends UserEntity implements UserDetails {
+//@AllArgsConstructor
+public class AuthenticatedUser {
+//public class AuthenticatedUser extends UserEntity {
+//public class AuthenticatedUser implements UserDetails {
+//public class AuthenticatedUser extends UserDto implements UserDetails {
 
     private Long id;
 
@@ -39,38 +42,56 @@ public class AuthenticatedUser extends UserEntity implements UserDetails {
         super();
         this.email = email;
     }
+//
+//    public AuthenticatedUser(String email) {
+//        super();
+//        this.email = email;
+//    }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(getRole().toString()));
-    }
+//    private UserDto userDto;
+//    private UserEntity userEntity;
 
-    @Override
-    public String getPassword() {
-        return super.getPassword();
-    }
+//    public AuthenticatedUser(UserDto userDto) {
+//        this.userDto = userDto;
+//    public AuthenticatedUser(UserEntity userEntity) {
+//        this.userEntity = userEntity;
+//    }
 
-    @Override
+//
+//    public List<GrantedAuthority> getAuthorities() {
+//        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+//        if (!CollectionUtils.isEmpty(Collections.singleton(userEntity.getRole()))) {
+//            grantedAuthorities.add(new SimpleGrantedAuthority(userEntity.getRole().toString()));
+//        }
+//        return grantedAuthorities;
+//    }
+
+
+//    public String getPassword() {
+//        return userEntity.getPassword();
+//    }
+//
+//
     public String getUsername() {
-        return super.getEmail();
+        return this.email;
     }
 
-    @Override
+
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    @Override
+
     public boolean isAccountNonLocked() {
         return true;
     }
 
-    @Override
+
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
-    @Override
+
     public boolean isEnabled() {
         return true;
     }

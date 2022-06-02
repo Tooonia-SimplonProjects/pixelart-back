@@ -122,7 +122,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 //    TODO see: WebSecurityConfig files with "CorsConfigurationSource" if this does not work!
-//    This is responsible for allowing requests from any application:
+    /**
+     * This is responsible for allowing requests from any application:
+     */
+
 //    @Bean
 //    CorsConfigurationSource corsConfigurationSource() {
 //        final CorsConfiguration configuration = new CorsConfiguration();
@@ -145,7 +148,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //            @Override // TODO: itt kicsit mas az ereeti kod, de ezt javasolta a SonarLint
 //            public void addCorsMappings(CorsRegistry registry) {
 //                registry.addMapping("/**")
-//                        .allowedMethods("GET", "POST", "PUT", "DELETE")
+//                        .allowedMethods("GET", "POST", "PUT", "OPTIONS", "DELETE")
 //                        .allowedHeaders("*")
 //                        .allowedOriginPatterns("*")
 //                        .allowCredentials(true);

@@ -53,7 +53,7 @@ public class ContextHelperUtil {
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
     }
 
-    private Collection<? extends GrantedAuthority> collectAuthoritiesFromRoles(List<RoleEntity> roles) {
+    private List<? extends GrantedAuthority> collectAuthoritiesFromRoles(List<RoleEntity> roles) {
         List<SimpleGrantedAuthority> result = new ArrayList<>();
         if (!CollectionUtils.isEmpty(roles)) {
             for (RoleEntity role : roles) {

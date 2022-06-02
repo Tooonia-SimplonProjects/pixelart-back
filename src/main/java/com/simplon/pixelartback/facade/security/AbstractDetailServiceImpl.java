@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Class responible to call UserService allowing access to its methods,
+ * and retrieve GrantedAuthority from a given User (UserDto)
+ */
 public class AbstractDetailServiceImpl {
 
     @Autowired
