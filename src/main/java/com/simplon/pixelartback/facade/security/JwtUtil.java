@@ -42,9 +42,9 @@ public class JwtUtil {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
-    public boolean validateToken(String token, AuthenticatedUser authenticatedUser) {
+    public boolean validateToken(String token, UserDetails userDetails) {
         String userEmail = getUserNameFromToken(token);
-        return (userEmail.equals(authenticatedUser.getEmail()) && !isTokenExpired(token));
+        return (userEmail.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {
@@ -56,12 +56,12 @@ public class JwtUtil {
         return getClaimFromToken(token, Claims::getExpiration);
     }
 
-public String generateToken(AuthenticatedUser authenticatedUser) {
+public String generateToken(UserDetails userDetails) {
 //        This ensures that the incoming JSON is automatically converted to a Java Map<String, Object>,
 //        handy for JWT as the method "setClaims" simply takes that Map and sets all the claims at once.
 //        source: https://www.baeldung.com/java-json-web-tokens-jjwt
         Map<String, Object> claims = new HashMap<>();
-        return Jwts.builder().setClaims(claims).setSubject(authenticatedUser.getEmail())
+        return Jwts.builder().setClaims(claims).setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY * 1000))
                 .signWith(io.jsonwebtoken.SignatureAlgorithm.HS256, secret)

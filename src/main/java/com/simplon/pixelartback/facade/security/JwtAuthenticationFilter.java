@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -72,31 +73,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } catch (ExpiredJwtException e) {
                 System.out.println("Jwt token is expired");
             }
-        } else if (header == null) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Status code (401) indicating that the request requires HTTP authentication.
-        } else {
+        }
+//        else if (header == null) {
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // Status code (401) indicating that the request requires HTTP authentication.
+//        }
+        else {
             System.out.println("Jwt token does not start with Bearer");
         }
 
-        if (userEmail != null && jwtUtil.validateToken(jwtToken) && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 //        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 //            Retrieve information from the token and validate it in the same time:
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-            final var authenticatedUser = mapper.convertValue(userDetails.getUsername(), AuthenticatedUser.class);
-            List<GrantedAuthority> authorities = jwtUtil.getAuthoritiesFromJWT(jwtToken);
+//            final var authenticatedUser = mapper.convertValue(userDetails.getUsername(), AuthenticatedUser.class);
+//            List<GrantedAuthority> authorities = jwtUtil.getAuthoritiesFromJWT(jwtToken);
 //            TODO: kell ez a kovetkezo sor? vagy duplicate a SecurityContext-be valo beirasa?
-            contextHelperUtil.setAuthenticatedUser(authenticatedUser);
+//            contextHelperUtil.setAuthenticatedUser(authenticatedUser);
 //            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail); //TODO: valszeg ez a UserDetailsServiceImpl class-om lesz?!, "email"-lel
 //            UserDetails userDetails = jwtService.loadUserByUsername(userEmail); //TODO: valszeg ez a UserDetailsServiceImpl class-om lesz?!, "email"-lel
 //  We are validating the token with the userDetails, in order to know that the token is valid for the given user.
 //  that will verify that the user email matches and the token has not expired:
-            if (jwtUtil.generateToken(authenticatedUser) != null) {
+//            if (jwtUtil.generateToken(authenticatedUser) != null) {
 //                TODO: mier "null" a password?
+            if (jwtUtil.validateToken(jwtToken, userDetails)) {
+
 //                List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 //                if (!CollectionUtils.isEmpty(Collections.singleton(authenticatedUser.getRole()))) {
 //                    grantedAuthorities.add(new SimpleGrantedAuthority(Collections.singleton(authenticatedUser.getRole()).toString()));
 //                }
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authenticatedUser.getEmail(), null, authorities);
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }

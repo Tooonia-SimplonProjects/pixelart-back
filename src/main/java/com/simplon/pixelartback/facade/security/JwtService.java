@@ -20,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -45,16 +46,17 @@ public class JwtService extends AbstractDetailServiceImpl { //TODO: jo otlet-e e
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public JwtResponse createJwtToken(AuthenticatedUser authenticatedUser) throws Exception{
+    public JwtResponse createJwtToken(JwtRequest jwtRequest) throws Exception{
 //    public JwtResponse createJwtToken(JwtRequest jwtRequest) throws Exception{
-//        String userEmail = jwtRequest.getEmail();
-//        String userPassword = jwtRequest.getPassword();
+        String userEmail = jwtRequest.getEmail();
+        String userPassword = jwtRequest.getPassword();
 //    public JwtResponse createJwtToken(UserDto userDto) throws Exception{
 //        String userEmail = userDto.getEmail();
 //        String userPassword = userDto.getPassword();
-//        authenticate(userEmail, userPassword);
+        authenticateUser(userEmail, userPassword);
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
 //        final UserDto userDto = userService.findByEmail(authenticatedUser.getEmail(), false);
-        String newGeneratedToken = jwtUtil.generateToken(authenticatedUser);
+        String newGeneratedToken = jwtUtil.generateToken(userDetails);
 //        UserDto user = getUserService().findByEmail(userEmail, true);
         return new JwtResponse(newGeneratedToken);
 //        return new JwtResponse(user, newGeneratedToken);
@@ -83,8 +85,8 @@ public class JwtService extends AbstractDetailServiceImpl { //TODO: jo otlet-e e
 //            throw new Exception("Bad credentials from user");
 //        }
 //    }
-public JwtResponse authenticateUser(JwtRequest jwtRequest) throws Exception {
-        if(jwtRequest.getEmail() == null || jwtRequest.getPassword() == null) {
+public void authenticateUser(String userEmail, String userPassword) throws Exception {
+        if(userEmail == null || userPassword == null) {
             throw new IllegalArgumentException("User email and password are obligatory");
         }
 //        UserDto user = getUserService().findByEmail(userEmail, true);
@@ -92,18 +94,20 @@ public JwtResponse authenticateUser(JwtRequest jwtRequest) throws Exception {
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(jwtRequest.getEmail(), jwtRequest.getPassword()));
+                    new UsernamePasswordAuthenticationToken(userEmail, userPassword, new ArrayList<>()));
 //                    new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
 //                    new UsernamePasswordAuthenticationToken(entity.getEmail(), entity.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            AuthenticatedUser authenticatedUser = mapper.convertValue(authentication.getPrincipal(), AuthenticatedUser.class);
+//            AuthenticatedUser authenticatedUser = mapper.convertValue(authentication.getPrincipal(), AuthenticatedUser.class);
 //            final var authenticatedUser = mapper.convertValue(authentJtd.getAccount(), AuthenticatedUser.class);
 //            contextHelperUtil.setAuthenticatedUser((AuthenticatedUser) authentication.getPrincipal());
 //            AuthenticatedUser authenticatedUser = (AuthenticatedUser) authentication.getPrincipal();
-            return createJwtToken(authenticatedUser);
+//            return createJwtToken(authenticatedUser);
         } catch (BadCredentialsException e) {
             throw new Exception("Invalid credentials: incorrect email or password", e);
+        } catch (DisabledException e) {
+            throw new Exception("User is disabled", e);
         }
 
     }
