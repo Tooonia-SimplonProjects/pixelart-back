@@ -1,7 +1,5 @@
 package com.simplon.pixelartback.service.user.impl;
 
-import com.simplon.pixelartback.facade.security.AuthenticatedUser;
-import com.simplon.pixelartback.facade.security.ContextHelperUtil;
 import com.simplon.pixelartback.facade.security.PasswordHelper;
 import com.simplon.pixelartback.service.mapper.UserGetMapper;
 import com.simplon.pixelartback.service.mapper.UserMapper;
@@ -40,9 +38,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordHelper passwordHelper;
-
-    @Autowired
-    private ContextHelperUtil contextHelperUtil;
 
     @Override
     public List<UserGetDto> getAllUsers() throws EmptyResultDataAccessException {

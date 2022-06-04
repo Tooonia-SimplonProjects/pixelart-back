@@ -1,7 +1,5 @@
 package com.simplon.pixelartback.facade.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.simplon.pixelartback.service.mapper.UserMapper;
 import com.simplon.pixelartback.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,7 +18,6 @@ import java.util.ArrayList;
  */
 @Service
 public class JwtService extends AbstractDetailServiceImpl {
-//public class JwtService extends AbstractDetailServiceImpl implements UserDetailsService {
 
     @Autowired
     UserDetailsServiceImpl userDetailsService;
@@ -31,15 +28,7 @@ public class JwtService extends AbstractDetailServiceImpl {
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
     UserService userService;
-
-    @Autowired
-    ContextHelperUtil contextHelperUtil;
-
-    private final ObjectMapper mapper = new ObjectMapper();
 
     public JwtResponse createJwtTokenAndAuthenticateUser(JwtRequest jwtRequest) throws Exception{
 

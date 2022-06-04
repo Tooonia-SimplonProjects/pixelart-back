@@ -1,9 +1,6 @@
 package com.simplon.pixelartback.facade.controller;
 
-import com.simplon.pixelartback.facade.security.AuthenticatedUser;
 import com.simplon.pixelartback.facade.security.AuthenticationUtil;
-import com.simplon.pixelartback.facade.security.AuthenticationUtilImpl;
-import com.simplon.pixelartback.facade.security.ContextHelperUtil;
 import com.simplon.pixelartback.service.user.UserService;
 import com.simplon.pixelartback.storage.dto.UserDto;
 import com.simplon.pixelartback.storage.dto.UserGetDto;
@@ -11,8 +8,6 @@ import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +29,6 @@ public class UserController {
 
     @Autowired
     private AuthenticationUtil authenticationUtil;
-
-    @Autowired
-    private ContextHelperUtil contextHelperUtil;
 
     /**
      * READ / GET all users    GET /api/users
@@ -79,17 +71,17 @@ public class UserController {
      * GET the user profile of the connected user by email (protected access)   GET  /api/user/me
      * @return
      */
-    //TODO: kell ez method?
-    @GetMapping("/user/me")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UserDto> getMe() {
-         if (authenticationUtil.isAuthenticated()) {
-             AuthenticatedUser authenticatedUser = contextHelperUtil.getAuthenticatedUser();
-//             if (authenticatedUser != null) {
-             return ResponseEntity.ok(userService.getUserByUuid(authenticatedUser.getUuid()));
-         }
-        return null;
-    }
+    //TODO: kell ez method? Egyelore nem mukodik!!!
+//    @GetMapping("/user/me")
+//    @PreAuthorize("isAuthenticated()")
+//    public ResponseEntity<UserDto> getMe() {
+//         if (authenticationUtil.isAuthenticated()) {
+//             AuthenticatedUser authenticatedUser = contextHelperUtil.getAuthenticatedUser();
+////             if (authenticatedUser != null) {
+//             return ResponseEntity.ok(userService.getUserByUuid(authenticatedUser.getUuid()));
+//         }
+//        return null;
+//    }
 
     /**
      * CREATE one user     POST /api/user

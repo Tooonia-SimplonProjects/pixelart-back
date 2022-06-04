@@ -2,15 +2,10 @@ package com.simplon.pixelartback.storage.dto;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.simplon.pixelartback.storage.entity.pixelart.PixelArtEntity;
-import com.simplon.pixelartback.storage.entity.role.RoleEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.UUID;
 
 // This DTO is a simplified version, and serves to expose the data of a specific User
 // No sensitive data, like email or password, are transmitted, so no such fields are required.

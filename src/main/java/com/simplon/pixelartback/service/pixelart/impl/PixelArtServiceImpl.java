@@ -1,12 +1,10 @@
 package com.simplon.pixelartback.service.pixelart.impl;
 
-import com.simplon.pixelartback.service.mapper.PixelArtSimpleMapper;
-import com.simplon.pixelartback.service.mapper.UserMapper;
-import com.simplon.pixelartback.storage.dao.UserDao;
-import com.simplon.pixelartback.storage.dto.PixelArtDto;
 import com.simplon.pixelartback.service.mapper.PixelArtMapper;
+import com.simplon.pixelartback.service.mapper.PixelArtSimpleMapper;
 import com.simplon.pixelartback.service.pixelart.PixelArtService;
 import com.simplon.pixelartback.storage.dao.PixelArtDao;
+import com.simplon.pixelartback.storage.dto.PixelArtDto;
 import com.simplon.pixelartback.storage.dto.PixelArtSimpleDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

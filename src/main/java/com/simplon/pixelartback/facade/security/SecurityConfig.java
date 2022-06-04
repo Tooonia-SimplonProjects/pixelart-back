@@ -16,8 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 
@@ -46,9 +44,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtAuthenticationFilter();
     }
 
-//    See: WebSecurityConfig class in "acl"
-//    AuthenticationManagerBuilder handles the authentication ruleset, and customises the UserDetails
-//    We are telling Spring Security to take "UserDetailsServiceImpl" class to validate the User
+    /**
+     * AuthenticationManagerBuilder handles the authentication ruleset, and customises the UserDetails
+     * We are telling Spring Security to take "UserDetailsServiceImpl" class to validate the User
+     * See: WebSecurityConfig class in "acl"
+     *
+     * @param auth
+     * @throws Exception
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         // We are using the default AuthenticationProvider.
@@ -99,6 +102,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * This is responsible for allowing requests from any application:
      */
+//    This 1st solution did not work here, conflict as a WebMvcConfigurer.
 //    @Bean
 //    public WebMvcConfigurer corsConfigurer() {
 //        return new WebMvcConfigurer() {

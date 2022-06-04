@@ -1,7 +1,6 @@
 package com.simplon.pixelartback.facade.security;
 
 import com.simplon.pixelartback.storage.dto.UserDto;
-import com.simplon.pixelartback.storage.dto.UserGetDto;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

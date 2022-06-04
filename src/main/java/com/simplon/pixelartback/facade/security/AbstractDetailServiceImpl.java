@@ -3,8 +3,6 @@ package com.simplon.pixelartback.facade.security;
 import com.simplon.pixelartback.service.user.UserService;
 import com.simplon.pixelartback.storage.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.util.CollectionUtils;

@@ -12,16 +12,16 @@ import java.util.Arrays;
 //@Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedMethods("GET", "POST", "PUT", "OPTIONS", "DELETE")
-                .allowedHeaders("*")
-                .exposedHeaders("WWW-Authenticate")
-                .allowedOriginPatterns("*")
-                .allowCredentials(true);
-        }
-    }
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**")
+//                .allowedMethods("GET", "POST", "PUT", "OPTIONS", "DELETE")
+//                .allowedHeaders("*")
+//                .exposedHeaders("WWW-Authenticate")
+//                .allowedOriginPatterns("*")
+//                .allowCredentials(true);
+//        }
+//    }
 
 //    CorsConfigurationSource corsConfigurationSource() {
 //        final CorsConfiguration configuration = new CorsConfiguration();
@@ -51,4 +51,4 @@ public class CorsConfig implements WebMvcConfigurer {
 //            }
 //        };
 //    }
-//}
+}
