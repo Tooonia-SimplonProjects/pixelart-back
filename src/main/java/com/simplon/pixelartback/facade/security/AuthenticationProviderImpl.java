@@ -24,7 +24,10 @@ import java.util.List;
 
 import lombok.val;
 
-//This class is our custom AuthenticationProvider class implementing Spring's AuthenticationProvider.
+/**
+ * This class is our custom AuthenticationProvider class implementing Spring's AuthenticationProvider.
+ */
+
 
 // Adding this "@Component" so Spring will scan this class automatically when loading the application, it will
 // instantiate it and inject any specified dependencies into it, and then
@@ -33,10 +36,10 @@ import lombok.val;
 //@Component
 public class AuthenticationProviderImpl  {
 //
-////    @Autowired
-////    @Lazy
-////    UserService userService;
-//
+//    @Autowired
+//    @Lazy
+//    UserService userService;
+
 //    @Autowired
 //    UserMapper userMapper;
 //

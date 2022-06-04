@@ -36,7 +36,7 @@ public class ContextHelperUtil {
                 LOGGER.error("User detail is null");
             } else {
                 if (detail instanceof AuthenticatedUser) {
-                    result = (AuthenticatedUser) detail;
+                    result = (AuthenticatedUser) detail; //TODO ERROR : Can not cast User to AuthenticatedUser!!! >>> throws Unknown authenticated user exception for "getUserByUuid"
                 } else {
                     LOGGER.error("Unknown authenticated user {}", auth.getPrincipal());
                 }
@@ -53,7 +53,7 @@ public class ContextHelperUtil {
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
     }
 
-    private Collection<? extends GrantedAuthority> collectAuthoritiesFromRoles(List<RoleEntity> roles) {
+    private List<? extends GrantedAuthority> collectAuthoritiesFromRoles(List<RoleEntity> roles) {
         List<SimpleGrantedAuthority> result = new ArrayList<>();
         if (!CollectionUtils.isEmpty(roles)) {
             for (RoleEntity role : roles) {

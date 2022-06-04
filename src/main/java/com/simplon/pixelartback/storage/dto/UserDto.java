@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.simplon.pixelartback.storage.entity.pixelart.PixelArtEntity;
 import com.simplon.pixelartback.storage.entity.role.RoleEntity;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.Email;
@@ -17,6 +19,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDto {
 
 //    TODO: lehet, h az "id" sem kell! Vagy uuid inkabb helyette?

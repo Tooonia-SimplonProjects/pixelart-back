@@ -4,13 +4,14 @@ import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  *  Our custom class providing utility methods for managing tokens, like generating, validating, and more.
@@ -41,9 +42,9 @@ public class JwtUtil {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
-    public boolean validateToken(String token, AuthenticatedUser authenticatedUser) {
+    public boolean validateToken(String token, UserDetails userDetails) {
         String userEmail = getUserNameFromToken(token);
-        return (userEmail.equals(authenticatedUser.getEmail()) && !isTokenExpired(token));
+        return (userEmail.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {
@@ -55,12 +56,12 @@ public class JwtUtil {
         return getClaimFromToken(token, Claims::getExpiration);
     }
 
-public String generateToken(AuthenticatedUser authenticatedUser) {
+public String generateToken(UserDetails userDetails) {
 //        This ensures that the incoming JSON is automatically converted to a Java Map<String, Object>,
 //        handy for JWT as the method "setClaims" simply takes that Map and sets all the claims at once.
 //        source: https://www.baeldung.com/java-json-web-tokens-jjwt
         Map<String, Object> claims = new HashMap<>();
-        return Jwts.builder().setClaims(claims).setSubject(authenticatedUser.getEmail())
+        return Jwts.builder().setClaims(claims).setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY * 1000))
                 .signWith(io.jsonwebtoken.SignatureAlgorithm.HS256, secret)
@@ -80,9 +81,15 @@ public String generateToken(AuthenticatedUser authenticatedUser) {
         return Long.parseLong(claims.getSubject());
     }
 
+
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken);
+//    public JwtTokenData validateToken(String authToken) {
+//        final JwtTokenData token = new JwtTokenData();
+//        try {
+//            token.setToken(authToken);
+//            Jws<Claims> jwtSigned = Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken);
 
         } catch (SignatureException ex) {
             LOGGER.error("Invalid JWT signature");
@@ -106,5 +113,18 @@ public String generateToken(AuthenticatedUser authenticatedUser) {
         }
 
         return true;
+    }
+
+    /**
+     * Return the jwt authorities claim encapsulated within the token
+     */
+    public List<GrantedAuthority> getAuthoritiesFromJWT(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(secret)
+                .parseClaimsJws(token)
+                .getBody();
+        return Arrays.stream(claims.get("authorities").toString().split(","))
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
 }
