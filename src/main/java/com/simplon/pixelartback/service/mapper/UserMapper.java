@@ -23,7 +23,7 @@ public interface UserMapper extends AbstractMapper<UserEntity, UserDto> {
     @Override
     List<UserEntity> dtosToEntities(List<UserDto> dtos);
 
-//    By the @Mapping ignore=true, we are protecting the password
+    // By the @Mapping ignore=true, we are protecting the password
     @Override
     @Mapping(target = "password", source = "password", ignore = true)
 //    @Mapping(target = "role", source = "role") //TODO: miert megy nelkule hirtelen? Adding this helped to visualize the role value, instead of "null"

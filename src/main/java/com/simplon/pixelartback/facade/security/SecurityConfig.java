@@ -3,7 +3,6 @@ package com.simplon.pixelartback.facade.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -14,21 +13,13 @@ import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import java.net.http.HttpHeaders;
-import java.util.Arrays;
-
-// Source: https://openclassrooms.com/fr/courses/5683681-secure-your-web-application-with-spring-security
 
 /**
  * @Configuration makes that the official config file for the security filter chain.
  * Extending it to "WebSecurityConfigurerAdapter" adds security to our web layer.
- * @EnableWebSecurity also needs to be set so to designate that a web security config file, creating the security filter chain
+ * @EnableWebSecurity also needs to be set in order to designate that a web security config file, creating the security filter chain.
  */
 
 @Configuration
@@ -37,13 +28,7 @@ import java.util.Arrays;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-//    @Lazy
     private UserDetailsServiceImpl userDetailsService;
-
-//    TODO: When deactivated, managed to use the bearer token to deblock functions with Authorization!?!
-//    We are also registering our custom AuthenticationProvider within this SecurityConfig class:
-//    @Autowired
-//    private AuthenticationProviderImpl authenticationProvider;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -51,33 +36,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-//    Our custom filter needs to come BEFORE UsernamePasswordAuthenticationFilter in the configure() method.
-//    @Autowired
-//    private JwtRequestFilter jwtRequestFilter;
-
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
     }
-//    @Autowired
-//    @Lazy
-//    JwtService jwtService;
 
 //    See: WebSecurityConfig class in "acl"
 //    AuthenticationManagerBuilder handles the authentication ruleset, and customises the UserDetails
 //    We are telling Spring Security to take "UserDetailsServiceImpl" class to validate the User
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        FIRST step of development: by using the default AuthenticationProvider,
-//        that itself is using the UserDetailsService and the PasswordEncoder.
-//        To the ".userDetailsService()" method we are passing our custom "userDetailsService",
-//        and we also provide the password encoder.
-//        TODO: passing in a user object that comes from the incoming request, based on the useremail and password
+        // We are using the default AuthenticationProvider.
+        // To the ".userDetailsService()" method we are passing our custom "userDetailsService",
+        // and we also provide the password encoder.
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-//        auth.userDetailsService(jwtService).passwordEncoder(passwordEncoder);
-
-//        SECOND step of development: by adding our own custom AuthenticationProvider:
-//        auth.authenticationProvider(authenticationProvider);
     }
 
     /**
@@ -92,11 +64,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * @param http
      * @throws Exception
      */
-
     @Override
     public void configure(HttpSecurity http) throws Exception {
-//        We are creating a form login (a default login page) in the security filter chain running on the set up ruleset.
-        // TODO: /users-t levenni a permitAll-bol!!! csak postman testhez kell!
+        // We are creating a form login (a default login page) in the security filter chain running on the set up ruleset.
+        // TODO: /users-t levenni a permitAll-bol!!! csak postman teszthez kell!
         http.cors()
                 .and()
                 .csrf().disable()
@@ -113,8 +84,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
                 http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); //First comes our custom filter
-//                http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); //First comes our custom filter
-
 //                .formLogin()
 //                .and()
 //                .httpBasic();
@@ -125,7 +94,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * This is responsible for allowing requests from any application:
      */
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedMethods("GET", "POST", "PUT", "OPTIONS", "DELETE")
+                        .allowedHeaders("*")
+                        .exposedHeaders("WWW-Authenticate")
+                        .allowedOriginPatterns("*")
+                        .allowCredentials(true);
+            }
+        };
+    }
 
+//    2nd solution:
 //    @Bean
 //    CorsConfigurationSource corsConfigurationSource() {
 //        final CorsConfiguration configuration = new CorsConfiguration();
@@ -143,35 +127,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        source.registerCorsConfiguration("/**", configuration);
 //        return source;
 //    }
-//    public WebMvcConfigurer corsConfigurer() {
-//        return new WebMvcConfigurer() {
-//            @Override // TODO: itt kicsit mas az ereeti kod, de ezt javasolta a SonarLint
-//            public void addCorsMappings(CorsRegistry registry) {
-//                registry.addMapping("/**")
-//                        .allowedMethods("GET", "POST", "PUT", "OPTIONS", "DELETE")
-//                        .allowedHeaders("*")
-//                        .allowedOriginPatterns("*")
-//                        .allowCredentials(true);
-//            }
-//        };
-//    }
-//@Bean
-//public CorsConfigurationSource corsConfigurationSource() {
-//    CorsConfiguration configuration = new CorsConfiguration();
-//    configuration.setAllowedOrigins(Arrays.asList("*"));
-//    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-//    configuration.setAllowedHeaders(Arrays.asList("Authorization", "content-type", "x-auth-token"));
-//    configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
-//    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//    source.registerCorsConfiguration("/**", configuration);
-//    return source;
-//}
 
-//    Did not manage to work with this @Bean declaration here, within that class!
+//    3rd solution:
 //    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder(8);
-//    }
+//    public CorsConfigurationSource corsConfigurationSource() {
+//      CorsConfiguration configuration = new CorsConfiguration();
+//      configuration.setAllowedOrigins(Arrays.asList("*"));
+//      configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+//      configuration.setAllowedHeaders(Arrays.asList("Authorization", "content-type", "x-auth-token"));
+//      configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
+//      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//      source.registerCorsConfiguration("/**", configuration);
+//      return source;
+//   }
 
     /**
      * This authenticationManagerBean method will help us to authenticate the User
@@ -185,12 +153,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    /**
+     * Method removing the the "ROLE_" prefix from user role's/authorities name as it is generated automatically by Spring
+     * @return
+     */
     @Bean
     GrantedAuthorityDefaults grantedAuthorityDefaults() {
-        // Removes the "ROLE_" prefix
         return new GrantedAuthorityDefaults("");
     }
-
-
-
 }

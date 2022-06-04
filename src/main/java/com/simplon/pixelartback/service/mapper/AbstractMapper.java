@@ -5,12 +5,11 @@ import org.mapstruct.MappingTarget;
 import java.util.Collection;
 import java.util.List;
 
-//Important: "As MapStruct operates at compile time, it can be faster than a dynamic mapping framework.
-// It can also generate error reports if mappings are incomplete — that is, if not all target properties
-// are mapped." source: https://www.baeldung.com/mapstruct-ignore-unmapped-properties
-
 /**
  * Abstract class of all mappers
+ * Important: "As MapStruct operates at compile time, it can be faster than a dynamic mapping framework.
+ * It can also generate error reports if mappings are incomplete — that is, if not all target properties
+ * are mapped." source: https://www.baeldung.com/mapstruct-ignore-unmapped-properties
  *
  * @param <E>
  * @param <D>
@@ -51,6 +50,4 @@ public interface AbstractMapper<E, D> {
      * @return the list of the converted dtos
      */
     List<D> entitiesToDtos(Collection<E> entities);
-
-    //TODO needed?: default Page<D> entitiesToDtos(Page<E> entities, Pageable pageable) {}
 }

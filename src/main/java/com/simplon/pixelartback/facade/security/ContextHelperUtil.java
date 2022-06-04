@@ -45,6 +45,7 @@ public class ContextHelperUtil {
         return result;
     }
 
+//    TODO: probablement pas besoin de ça!
     public void setAuthenticatedUser(AuthenticatedUser authenticatedUser) {
         final var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                 authenticatedUser.getEmail(), null, collectAuthoritiesFromRoles(Collections.singletonList(authenticatedUser.getRole()))

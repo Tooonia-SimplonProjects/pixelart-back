@@ -5,7 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-//The primary key tipe is "Long"
+/**
+ * Extending JpaRepository. Within the parameters, meaning: the primary key type is "Long".
+ */
 public interface UserDao extends JpaRepository<UserEntity, Long> {
 
     UserEntity findByUuid(UUID uuid);

@@ -3,7 +3,6 @@ package com.simplon.pixelartback.service.user.impl;
 import com.simplon.pixelartback.facade.security.AuthenticatedUser;
 import com.simplon.pixelartback.facade.security.ContextHelperUtil;
 import com.simplon.pixelartback.facade.security.PasswordHelper;
-import com.simplon.pixelartback.service.mapper.UserForPixelArtMapper;
 import com.simplon.pixelartback.service.mapper.UserGetMapper;
 import com.simplon.pixelartback.service.mapper.UserMapper;
 import com.simplon.pixelartback.service.user.UserService;
@@ -17,16 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -43,18 +36,10 @@ public class UserServiceImpl implements UserService {
     private UserGetMapper userGetMapper;
 
     @Autowired
-    private UserForPixelArtMapper userForPixelArtMapper;
-
-    @Autowired
     private UserDao userDao;
 
     @Autowired
-//    @Lazy
-//    private PasswordEncoder passwordEncoder;
     private PasswordHelper passwordHelper;
-
-//    @Autowired
-//    private AuthenticationManager authenticationManager;
 
     @Autowired
     private ContextHelperUtil contextHelperUtil;
@@ -69,42 +54,21 @@ public class UserServiceImpl implements UserService {
         if(uuid == null) {
             throw new IllegalArgumentException("UUID User is missing");
         }
-//        AuthenticatedUser authenticatedUser = contextHelperUtil.getAuthenticatedUser();
-//        if (authenticatedUser != null) {
-//            if (authenticatedUser.getUuid() == uuid) {
-//                return userMapper.entityToDto(userDao.findByUuid(uuid));
-//            } else {
-//                throw new IllegalArgumentException("Not authorized, UUID is not the same");
-//            }
-////            UserEntity authenticated = userDao.findByEmail(authenticatedUser.getEmail());
-////            UserDto authenticated = findByEmail(authenticatedUser.getEmail(), false);
-////            UserDto current = userMapper.entityToDto(userDao.findByUuid(uuid));
-//        }
-//        return null;
-//        if(uuid == null) {
-//            throw new IllegalArgumentException("UUID User is missing");
-//        }
         return userMapper.entityToDto(userDao.findByUuid(uuid));
     }
 
     @Override
-    public UserDto getUserById(Long id) {
+    public UserGetDto getUserById(Long id) {
         if (id == null) {
             throw new IllegalArgumentException("Id PixelArt is missing");
         }
-        return userMapper.entityToDto(userDao.getUserById(id));
+        return userGetMapper.entityToDto(userDao.getUserById(id));
     }
 
-    @Override
-    public UserDto getMe() {
-        AuthenticatedUser authenticatedUser = contextHelperUtil.getAuthenticatedUser();
-        if (authenticatedUser != null) {
-            return findByEmail(authenticatedUser.getEmail(), false);
-        }
-        return null;
-    }
-// Does not have a separate endpoint in the UserController, only helps here in this UserServiceImpl class.
-    @Override
+    /**
+     * This method does not have a separate endpoint in the UserController, only helps here in this UserServiceImpl class.
+     */
+        @Override
     public UserDto findByEmail(String email, boolean withPassword) {
         if (email == null) {
             throw new IllegalArgumentException("Email is missing");
@@ -139,8 +103,7 @@ public class UserServiceImpl implements UserService {
         if (!userDto.getPassword().isEmpty()) {
             entity.setPassword(passwordHelper.encodePassword(userDto.getPassword()));
         }
-//        entity.setPassword(passwordEncoder.encode(userDto.getPassword()));
-//        At that 1st phase of development, we only create Users with role "USER"
+        // At that 1st phase of development, we only create Users with role "USER"
         entity.setRole(RoleEntity.USER);
         val savedEntity = userDao.save(entity);
 //        System.out.println(entity.getRole()); <<< right value here : USER
@@ -160,15 +123,15 @@ public class UserServiceImpl implements UserService {
         if (existingEntity == null) {
             throw new IllegalArgumentException("User unknown : " + uuid);
         }
-//        TODO: does not work when @PreAuthorize("hasAnyRole('USER')") on method in Controller:
+//        TODO: does not work when @PreAuthorize("hasAnyRole('USER')") on method in Controller,
+//         de valoszinuleg meg nem volt kesz a method, ami leveszi a "ROLE_3 prefixet!
 //        if (existingEntity.getRole().toString() == "USER") {
 //        if (Objects.equals(existingEntity.getRole().toString(), "USER")) {
             userDao.delete(existingEntity);
-//        }
     }
 
 //    @Override
-////    TODO: no need for @Transactional, right?
+////    No need for @Transactional, right?
 //    public void loginUser(UserDto userDto) throws Exception {
 //        if(userDto == null) {
 //            throw new IllegalArgumentException("User is obligatory");

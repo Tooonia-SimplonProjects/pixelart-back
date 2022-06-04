@@ -1,22 +1,12 @@
 package com.simplon.pixelartback.storage.entity.pixelart;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializable;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.jsontype.TypeSerializer;
-import com.fasterxml.jackson.databind.ser.std.SerializableSerializer;
 import com.simplon.pixelartback.storage.entity.user.UserEntity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.io.IOException;
 import java.io.Serializable;
-import java.util.UUID;
 
 @Entity
 @Table(name = "pixel_art")
@@ -26,8 +16,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-//@JsonSerialize(using = SerializableSerializer.class)
-//public class PixelArtEntity extends JsonSerializable.Base {
 public class PixelArtEntity implements Serializable {
 
 //    private static final long serialVersionUID = 6858481209380769717L;
@@ -63,17 +51,6 @@ public class PixelArtEntity implements Serializable {
     @JsonIgnoreProperties("pixelArtEntityList")
     private UserEntity userEntity;
 
-//    @Column(name = "product_price", nullable = false)
-//    private Integer productPrice;
-
-//    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-//    @JsonCreator
-//    public PixelArtEntity(@JsonProperty("id") Long id, @JsonProperty("name") String name, @JsonProperty("id_user_fk") UserEntity userEntity) {
-//        this.id = id;
-//        this.name = name;
-//        this.userEntity = userEntity;
-//    }
-
     //    source: https://stackoverflow.com/questions/22688402/delete-not-working-with-jparepository
 //    @PreRemove
     public void dismissParent() {
@@ -97,19 +74,4 @@ public class PixelArtEntity implements Serializable {
         }
         return super.equals(obj);
     }
-
-//    @Override
-//    public void serialize(JsonGenerator gen, SerializerProvider serializers) throws IOException {
-//        gen.writeStartObject();
-//        gen.writeFieldName("name");
-//        gen.writeString(this.name);
-//        gen.writeFieldName("userEntity");
-//        gen.writeNumber(this.userEntity.getId());
-//        gen.writeEndObject();
-//    }
-//
-//    @Override
-//    public void serializeWithType(JsonGenerator gen, SerializerProvider serializers, TypeSerializer typeSer) throws IOException {
-//        throw new UnsupportedOperationException("Not supported.");
-//    }
 }

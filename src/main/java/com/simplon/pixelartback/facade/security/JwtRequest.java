@@ -15,14 +15,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class JwtRequest {
 
-//    private String userEmail;
-//
-//    private String userPassword;
-
     private String email;
-//    private String alias;
-
-//    @NotNull
-//    @JsonProperty("user_password")
     private String password;
 }

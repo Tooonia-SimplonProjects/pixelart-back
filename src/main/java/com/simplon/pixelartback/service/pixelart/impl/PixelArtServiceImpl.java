@@ -21,7 +21,6 @@ import java.util.List;
 
 //    TODO: if exception / error to handle, is it already at that level? Because can't just write those at Controller?!
 @Service
-// A hint for the persistence provider that the transaction should be 'read only'; default value is "false"
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
@@ -40,20 +39,8 @@ public class PixelArtServiceImpl implements PixelArtService {
     @Autowired
     private PixelArtDao pixelArtDao;
 
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private UserDao userDao;
-
-//    @Autowired
-//    public PixelArtServiceImpl(PixelArtDao pixelArtDao, PixelArtMapper pixelArtMapper) {
-//        super();
-//        this.pixelArtDao = pixelArtDao;
-//        this.pixelArtMapper = pixelArtMapper;
-//    }
     @Override
-    public List<PixelArtDto> getAllPixelArt() throws EmptyResultDataAccessException { //TODO: good exception here?
+    public List<PixelArtDto> getAllPixelArt() throws EmptyResultDataAccessException {
         return pixelArtMapper.entitiesToDtos(pixelArtDao.findAll());
     }
 
@@ -86,7 +73,6 @@ public class PixelArtServiceImpl implements PixelArtService {
         }
         List<PixelArtDto> eixstingPixelartList = pixelArtMapper.entitiesToDtos(pixelArtDao.findAll());
         List<PixelArtDto> pixelArtListByUser = new ArrayList<>();
-//        PixelArtDto p = new PixelArtDto();
         for (PixelArtDto p : eixstingPixelartList) {
             if (p.getUserEntity().getId().longValue() == id) {
                 pixelArtListByUser.add(p);
@@ -101,8 +87,8 @@ public class PixelArtServiceImpl implements PixelArtService {
         if (pixelArtDto == null) {
             throw new IllegalArgumentException("PixelArt is obligatory");
         }
-//      Using Lombok 'val' declares the variable as final and automatically infers the type after initializing it:
-        val entity = pixelArtMapper.dtoToEntity(pixelArtDto); // TODO: Meaning/utility of 'processor' in ProjectServiceImpl?
+        // Using Lombok 'val' declares the variable as final and automatically infers the type after initializing it:
+        val entity = pixelArtMapper.dtoToEntity(pixelArtDto);
 //        TODO: why not set/map all the parameters here? according to Dto's values? (getProductImage() does not even exist on pixelArtDto!)
         val savedEntity = pixelArtDao.save(entity);
 
@@ -115,7 +101,6 @@ public class PixelArtServiceImpl implements PixelArtService {
         if (pixelArtSimpleDto.getId() == null) {
             throw new IllegalArgumentException("ID pixelArt missing");
         }
-//        val entity = pixelArtMapper.dtoToEntity(pixelArtDto); // According to UserServiceImpl no need for that!
         val existingEntity = pixelArtDao.getPixelArtById(pixelArtSimpleDto.getId());
 //        System.out.println(pixelArtDto.getId());
 //        System.out.println(existingEntity);
@@ -123,9 +108,8 @@ public class PixelArtServiceImpl implements PixelArtService {
         if (existingEntity == null) {
             throw new IllegalArgumentException("PixelArt unknown : " + pixelArtSimpleDto.getId());
         }
-//        Updating the existing entity with pixelArtDto values:
+        // Updating the existing entity with pixelArtDto values:
         pixelArtSimpleMapper.dtoToEntity(pixelArtSimpleDto, existingEntity);
-//        val savedEntity = pixelArtDao.save(existingEntity);
         pixelArtDao.save(existingEntity);
 
         return pixelArtSimpleMapper.entityToDto(existingEntity);
