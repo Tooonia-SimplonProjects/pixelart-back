@@ -13,8 +13,13 @@ import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.Arrays;
 
 /**
  * @Configuration makes that the official config file for the security filter chain.
@@ -94,39 +99,39 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * This is responsible for allowing requests from any application:
      */
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedMethods("GET", "POST", "PUT", "OPTIONS", "DELETE")
-                        .allowedHeaders("*")
-                        .exposedHeaders("WWW-Authenticate")
-                        .allowedOriginPatterns("*")
-                        .allowCredentials(true);
-            }
-        };
-    }
+//    @Bean
+//    public WebMvcConfigurer corsConfigurer() {
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/**")
+//                        .allowedMethods("GET", "POST", "PUT", "OPTIONS", "DELETE")
+//                        .allowedHeaders("*")
+//                        .exposedHeaders("WWW-Authenticate")
+//                        .allowedOriginPatterns("*")
+//                        .allowCredentials(true);
+//            }
+//        };
+//    }
 
 //    2nd solution:
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        final CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "PUT", "DELETE"));
-//        configuration.addAllowedHeader("*");
-//        configuration.addExposedHeader("Authorization");
-//        configuration.addExposedHeader("X-TOKEN");
-//        configuration.setAllowCredentials(true);
-//
-//        // Url autorisées
-//        // 4200 pour les développement | 8080 pour le déploiement
-//        configuration.setAllowedOrigins(Arrays.asList("*"));
-//
-//        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        final CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "PUT", "DELETE"));
+        configuration.addAllowedHeader("*");
+        configuration.addExposedHeader("Authorization");
+        configuration.addExposedHeader("X-TOKEN");
+        configuration.setAllowCredentials(true);
+
+        // Authorized URLs
+        // 4200, 8085
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
 //    3rd solution:
 //    @Bean
