@@ -14,8 +14,6 @@ import java.io.IOException;
  * Class responsible for authenticating the JWT Token. If authentication fails,
  * the application throws the "Unauthorized" error.
  */
-//@EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
  @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override

@@ -2,7 +2,6 @@ package com.simplon.pixelartback.storage.dto;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.simplon.pixelartback.storage.entity.pixelart.PixelArtEntity;
 import com.simplon.pixelartback.storage.entity.role.RoleEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,11 +10,11 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.UUID;
 
-//The validation logic is defined at that level:
-//with @NotNull, @Email
+/**
+ * The validation logic is defined at that level: with @NotNull, @Email
+ */
 @Getter
 @Setter
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)

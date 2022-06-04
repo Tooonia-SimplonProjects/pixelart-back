@@ -6,23 +6,31 @@ import com.simplon.pixelartback.storage.dto.UserGetDto;
 import java.util.List;
 import java.util.UUID;
 
-//    Focus on the creation of a new User (Signup), and on Login during the first phase of dev
+/**
+ * Focus on the creation of a new User (Signup), and on Login during the first phase of dev
+ */
 public interface UserService {
 
     List<UserGetDto> getAllUsers();
 
-//    For /my-profile, information with email (private access):
+    /**
+    * For /my-profile, information with email info (private access):
+    */
     UserDto getUserByUuid(UUID uuid);
 
-//    For listing the pixelart of one User (public access):
-    UserDto getUserById(Long id);
-//    UserGetDto getUserById(Long id);
-
     /**
-     * GET the connected user
+     * For listing the pixelart of one specific User (public access):
+     * @param id
      * @return
      */
-    UserDto getMe();
+//
+    UserGetDto getUserById(Long id);
+
+//    /**
+//     * GET the connected user TODO: kell?
+//     * @return
+//     */
+//    UserDto getMe();
 
     UserDto findByEmail(String email, boolean withPassword);
 

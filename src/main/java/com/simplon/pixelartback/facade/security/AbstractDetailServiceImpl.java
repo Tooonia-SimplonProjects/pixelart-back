@@ -14,13 +14,13 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Class responible to call UserService allowing access to its methods,
+ * Class responsible to call UserService allowing access to its methods,
  * and retrieve GrantedAuthority from a given User (UserDto)
  */
 public class AbstractDetailServiceImpl {
 
     @Autowired
-    @Lazy
+//    @Lazy Might be needed here
     private UserService userService;
 
     protected List<GrantedAuthority> computeGrantedAuthorities(UserDto user) {

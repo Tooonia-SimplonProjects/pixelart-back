@@ -1,10 +1,7 @@
 package com.simplon.pixelartback.storage.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.simplon.pixelartback.storage.entity.language.LanguageEntity;
 import com.simplon.pixelartback.storage.entity.pixelart.PixelArtEntity;
 import com.simplon.pixelartback.storage.entity.role.RoleEntity;
 import lombok.*;
@@ -39,9 +36,6 @@ public class UserEntity implements Serializable {
     private String email;
 
     @Column(name = "user_password", length = 150, nullable = false)
-//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-//    @JsonIgnoreProperties("user_password")
-//    @JsonIgnore
     private String password;
 
     @Column(name = "role", nullable = false)
@@ -75,14 +69,4 @@ public class UserEntity implements Serializable {
         this.pixelArtEntityList.forEach(pixelArtEntity -> pixelArtEntity.dismissParent()); // SYNCHRONIZING THE OTHER SIDE OF RELATIONSHIP
         this.pixelArtEntityList.clear();
     }
-
-//    @JsonIgnore
-//    public String getEmail() {
-//        return email;
-//    }
-
-//    @JsonProperty
-//    public void setEmail(String email) {
-//        this.email = email;
-//    }
 }

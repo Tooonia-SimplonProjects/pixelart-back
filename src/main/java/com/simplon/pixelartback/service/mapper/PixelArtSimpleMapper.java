@@ -1,6 +1,5 @@
 package com.simplon.pixelartback.service.mapper;
 
-import com.simplon.pixelartback.storage.dto.PixelArtDto;
 import com.simplon.pixelartback.storage.dto.PixelArtSimpleDto;
 import com.simplon.pixelartback.storage.entity.pixelart.PixelArtEntity;
 import org.mapstruct.Mapper;

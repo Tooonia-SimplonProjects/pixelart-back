@@ -22,7 +22,6 @@ import java.util.UUID;
 @NoArgsConstructor
 //@AllArgsConstructor
 public class AuthenticatedUser {
-//public class AuthenticatedUser extends UserEntity {
 //public class AuthenticatedUser implements UserDetails {
 //public class AuthenticatedUser extends UserDto implements UserDetails {
 

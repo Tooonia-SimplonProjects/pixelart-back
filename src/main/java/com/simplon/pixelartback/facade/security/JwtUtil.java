@@ -28,20 +28,45 @@ public class JwtUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtUtil.class);
 
-    public String getUserNameFromToken(String token) { // TODO: lehet, h ez nekem az email!
+    /**
+     * Returns the Subject associated with the token
+     * @param token
+     * @return
+     */
+    public String getUserNameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
-    //It takes function as argument and return the function
+    /**
+     * Returns the information contained in the token
+     *
+     * @param token
+     * @param claimResolver  Name of the Property
+     * @return
+     * @param <T>
+     */
     private <T> T getClaimFromToken(String token, Function<Claims, T> claimResolver) {
         final Claims claims = getAllClaimsFromToken(token);
         return claimResolver.apply(claims);
     }
 
+    /**
+     * Returns all the properties of the token, all the payload of the token object as a JSON object
+     *
+     * @param token
+     * @return
+     */
     private Claims getAllClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
+    /**
+     * Validate the token by comparing user emails of the token and the current UserDetails
+     *
+     * @param token
+     * @param userDetails
+     * @return
+     */
     public boolean validateToken(String token, UserDetails userDetails) {
         String userEmail = getUserNameFromToken(token);
         return (userEmail.equals(userDetails.getUsername()) && !isTokenExpired(token));
@@ -56,17 +81,16 @@ public class JwtUtil {
         return getClaimFromToken(token, Claims::getExpiration);
     }
 
-public String generateToken(UserDetails userDetails) {
-//        This ensures that the incoming JSON is automatically converted to a Java Map<String, Object>,
-//        handy for JWT as the method "setClaims" simply takes that Map and sets all the claims at once.
-//        source: https://www.baeldung.com/java-json-web-tokens-jjwt
+    public String generateToken(UserDetails userDetails) {
+        // This ensures that the incoming JSON is automatically converted to a Java Map<String, Object>,
+        // handy for JWT as the method "setClaims" simply takes that Map and sets all the claims at once.
+        // source: https://www.baeldung.com/java-json-web-tokens-jjwt
         Map<String, Object> claims = new HashMap<>();
         return Jwts.builder().setClaims(claims).setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY * 1000))
                 .signWith(io.jsonwebtoken.SignatureAlgorithm.HS256, secret)
                 .compact();
-//        TODO: ide a secret helyett kell a secretService.getHS256SecretBytes()!!!
     }
 
     /**
@@ -85,33 +109,20 @@ public String generateToken(UserDetails userDetails) {
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken);
-//    public JwtTokenData validateToken(String authToken) {
-//        final JwtTokenData token = new JwtTokenData();
-//        try {
-//            token.setToken(authToken);
-//            Jws<Claims> jwtSigned = Jwts.parser().setSigningKey(secret).parseClaimsJws(authToken);
-
-        } catch (SignatureException ex) {
+       } catch (SignatureException ex) {
             LOGGER.error("Invalid JWT signature");
             throw new SignatureException("JWT " + authToken + " Incorrect signature", ex);
 
         } catch (MalformedJwtException ex) {
             LOGGER.error("Invalid JWT token");
             throw new MalformedJwtException("JWT " + authToken + " Malformed jwt token", ex);
-
-//        } catch (ExpiredJwtException ex) {
-//            LOGGER.error("Expired JWT token");
-//            throw new ExpiredJwtException(H"JWT " + authToken + " Token expired. Refresh required", ex);
-
-        } catch (UnsupportedJwtException ex) {
+       } catch (UnsupportedJwtException ex) {
             LOGGER.error("Unsupported JWT token");
             throw new UnsupportedJwtException("JWT " + authToken + " Unsupported JWT token");
-
         } catch (IllegalArgumentException ex) {
             LOGGER.error("JWT claims string is empty.");
             throw new IllegalArgumentException("JWT " + authToken + " Illegal argument token");
         }
-
         return true;
     }
 

@@ -9,11 +9,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 
-@Configuration
+//@Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
-//    TODO: ex de Manel
-    @Override // TODO: itt kicsit mas az ereeti kod, de ezt javasolta a SonarLint
+    @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedMethods("GET", "POST", "PUT", "OPTIONS", "DELETE")
@@ -23,7 +22,6 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowCredentials(true);
         }
     }
-
 
 //    CorsConfigurationSource corsConfigurationSource() {
 //        final CorsConfiguration configuration = new CorsConfiguration();
