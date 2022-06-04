@@ -1,5 +1,7 @@
 package com.simplon.pixelartback.facade.controller;
 
+import com.simplon.pixelartback.facade.security.AuthenticationUtil;
+import com.simplon.pixelartback.facade.security.AuthenticationUtilImpl;
 import com.simplon.pixelartback.service.user.UserService;
 import com.simplon.pixelartback.storage.dto.UserDto;
 import com.simplon.pixelartback.storage.dto.UserGetDto;
@@ -8,15 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +29,8 @@ public class UserController {
     @Lazy
     private UserService userService;
 
+    @Autowired
+    private AuthenticationUtil authenticationUtil;
 
     //  READ / GET all users    GET /api/users
     @GetMapping("/users")
@@ -47,8 +47,11 @@ public class UserController {
     @PreAuthorize("hasAnyRole('USER')")
 //    @PreAuthorize("isAuthenticated()") //TODO: probably en double!
     public ResponseEntity<UserDto> getUserByUuid(@PathVariable("uuid") UUID uuid) throws Exception {
-//        TODO: see if needed to compare uuid of parameter and entity!!!
-        return ResponseEntity.ok(userService.getUserByUuid(uuid));
+        if (authenticationUtil.authenticatedUserHasAccessToUser(uuid)) {
+            return ResponseEntity.ok(userService.getUserByUuid(uuid));
+        }
+        LOGGER.info("Not authorized to access that User information");
+        return null;
     }
 
     //    READ / GET one user by id    GET /api/user/{id}
