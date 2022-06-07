@@ -18,6 +18,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * @Configuration makes that the official config file for the security filter chain.
@@ -125,12 +126,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "PUT", "DELETE"));
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader("Authorization");
-        configuration.addExposedHeader("X-TOKEN");
+//        configuration.setAllowedHeaders(Arrays.asList("Authorization", "content-type", "x-auth-token"));
+//        configuration.addExposedHeader("X-TOKEN"); //TODO: elvileg ez nem kell!
         configuration.setAllowCredentials(true);
 
         // Authorized URLs
         // 4200, 8085
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+//        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
 
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

@@ -17,6 +17,8 @@ public interface AuthenticationUtil {
 
     boolean authenticatedUserHasAccessToUser(UUID uuid);
 
+    boolean authenticatedUserHasAccessToPixelart(Long id);
+
     boolean isAuthenticated();
 
     String getUserName();

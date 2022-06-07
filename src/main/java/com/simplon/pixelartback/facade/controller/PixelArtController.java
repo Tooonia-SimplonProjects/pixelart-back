@@ -1,9 +1,13 @@
 package com.simplon.pixelartback.facade.controller;
 
+import com.simplon.pixelartback.facade.security.AuthenticationUtil;
 import com.simplon.pixelartback.storage.dto.PixelArtDto;
 import com.simplon.pixelartback.service.pixelart.PixelArtService;
 import com.simplon.pixelartback.storage.dto.PixelArtSimpleDto;
+import com.simplon.pixelartback.storage.entity.pixelart.PixelArtEntity;
 import lombok.val;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +24,11 @@ public class PixelArtController {
 
     @Autowired
     private PixelArtService pixelArtService;
+
+    @Autowired
+    private AuthenticationUtil authenticationUtil;
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     /**
      * READ / GET all (catalog)    GET /api/pixelart
@@ -82,13 +91,17 @@ public class PixelArtController {
      * @throws Exception
      */
     @PostMapping("/pixelart-create")
-    @PreAuthorize("hasAnyRole('USER')")
-//    @PreAuthorize("isAuthenticated()") // TODO: Probably double definition with SecurityContext!!!
+//    @PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("isAuthenticated()") // TODO: Probably double definition with SecurityContext!!!
     public ResponseEntity<PixelArtDto> createPixelArt(@RequestBody PixelArtDto pixelArtDto) throws Exception {
-        val createdPixelArtDto = pixelArtService.createPixelArt(pixelArtDto);
-        val location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(createdPixelArtDto.getId()).toUri();
-        return ResponseEntity.created(location).body(createdPixelArtDto);
+        if (authenticationUtil.isAuthenticated()) {
+            val createdPixelArtDto = pixelArtService.createPixelArt(pixelArtDto);
+            val location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                    .buildAndExpand(createdPixelArtDto.getId()).toUri();
+            return ResponseEntity.created(location).body(createdPixelArtDto);
+        }
+        LOGGER.info("You have to be logged in to create pixelart");
+        return null;
     }
 
     /**
@@ -99,13 +112,18 @@ public class PixelArtController {
      * @throws Exception
      */
     @PutMapping("/pixelart-edit/{id}")
-    @PreAuthorize("hasAnyRole('USER')")
+//    @PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PixelArtSimpleDto> updatePixelArt(@PathVariable(name = "id") Long id, @RequestBody PixelArtSimpleDto pixelArtSimpleDto) throws Exception {
-        if(id.longValue() != pixelArtSimpleDto.getId().longValue()) {
-            throw new IllegalArgumentException("Id in URL " + id + " does not match the id of of current pixelArt : " + pixelArtSimpleDto.getId()
-                    + "PixelArt id can not be updated.");
+        if (authenticationUtil.authenticatedUserHasAccessToPixelart(id)) {
+            if(id.longValue() != pixelArtSimpleDto.getId().longValue()) {
+                throw new IllegalArgumentException("Id in URL " + id + " does not match the id of of current pixelArt : " + pixelArtSimpleDto.getId()
+                        + "PixelArt id can not be updated.");
+            }
+            return ResponseEntity.ok(pixelArtService.updatePixelArt(pixelArtSimpleDto));
         }
-        return ResponseEntity.ok(pixelArtService.updatePixelArt(pixelArtSimpleDto));
+        LOGGER.info("Not authorized to update that PixelArt");
+        return null;
     }
 
     /**
@@ -116,9 +134,14 @@ public class PixelArtController {
      */
 //
     @DeleteMapping("/pixelart-edit/{id}")
-    @PreAuthorize("hasAnyRole('USER')")
+//    @PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> deletePixelArt(@PathVariable(name = "id") Long id) throws Exception {
-        pixelArtService.deletePixelArt(id);
-        return ResponseEntity.ok().build();
+        if (authenticationUtil.authenticatedUserHasAccessToPixelart(id)) {
+            pixelArtService.deletePixelArt(id);
+            return ResponseEntity.ok().build();
+        }
+        LOGGER.info("Not authorized to delete that PixelArt");
+        return null;
     }
 }

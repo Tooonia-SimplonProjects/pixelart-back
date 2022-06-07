@@ -1,8 +1,12 @@
 package com.simplon.pixelartback.facade.security;
 
+import com.simplon.pixelartback.service.mapper.UserGetMapper;
 import com.simplon.pixelartback.service.mapper.UserMapper;
 import com.simplon.pixelartback.storage.dao.UserDao;
+import com.simplon.pixelartback.storage.dto.PixelArtDto;
+import com.simplon.pixelartback.storage.dto.PixelArtSimpleDto;
 import com.simplon.pixelartback.storage.dto.UserDto;
+import com.simplon.pixelartback.storage.dto.UserGetDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -25,6 +30,9 @@ public class AuthenticationUtilImpl implements AuthenticationUtil {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    UserGetMapper userGetMapper;
 
     @Autowired
     UserDao userDao;
@@ -56,6 +64,29 @@ public class AuthenticationUtilImpl implements AuthenticationUtil {
             }
         }
     }
+
+    /**
+     * Checks existence of an authenticated user, looks for the id of its pixelart if any, and compare it to the given id.
+     * If matches, returned boolean set to "true"
+     * @param id
+     * @return
+     */
+    public boolean authenticatedUserHasAccessToPixelart(Long id) {
+        if (!isAuthenticated()) {
+            LOGGER.error("Null authentification");
+            return false;
+        } else {
+            String currentUserEmail = getUserName();
+            UserGetDto userGetDto = userGetMapper.entityToDto(userDao.findByEmail(currentUserEmail));
+            List<PixelArtSimpleDto> pixelArtSimpleDtos = userGetDto.getPixelArtEntityList();
+            for (PixelArtSimpleDto p : pixelArtSimpleDtos) {
+                if (p.getId().equals(id)) {
+                    return true;
+                }
+            }
+        } return false;
+    }
+
 
     /**
      * Cheks if there is current authentication

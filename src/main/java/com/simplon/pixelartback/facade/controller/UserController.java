@@ -71,6 +71,11 @@ public class UserController {
      * GET the user profile of the connected user by email (protected access)   GET  /api/user/me
      * @return
      */
+    @GetMapping("/user")
+    public ResponseEntity<UserDto> getUserByEmail(String email, boolean withPassword) {
+        return ResponseEntity.ok(userService.findByEmail(email, withPassword));
+    }
+
     //TODO: kell ez method? Egyelore nem mukodik!!!
 //    @GetMapping("/user/me")
 //    @PreAuthorize("isAuthenticated()")
@@ -106,12 +111,24 @@ public class UserController {
      * @param uuid
      * @return
      */
-    @DeleteMapping("/my-profile/{uuid}")
+    @DeleteMapping("/my-profile")
     @PreAuthorize("hasAnyRole('USER')")
 //    @PreAuthorize("isAuthenticated()")
+//    public ResponseEntity<Void> deleteUser(String email) {
+//        if (authenticationUtil.authenticatedUserHasAccessToUser(uuid)) {
+//            userService.deleteUser(uuid);
+//            return ResponseEntity.ok().build();
+//        }
+//        LOGGER.info("Not authorized to delete that User");
+//        return null;
+//    }
     public ResponseEntity<Void> deleteUser(@PathVariable(name = "uuid") UUID uuid) {
-        userService.deleteUser(uuid);
-        return ResponseEntity.ok().build();
+        if (authenticationUtil.authenticatedUserHasAccessToUser(uuid)) {
+            userService.deleteUser(uuid);
+            return ResponseEntity.ok().build();
+        }
+        LOGGER.info("Not authorized to delete that User");
+        return null;
     }
 
 //    @PostMapping("/login")
