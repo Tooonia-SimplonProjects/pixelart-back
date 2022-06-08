@@ -65,6 +65,22 @@ public class AuthenticationUtilImpl implements AuthenticationUtil {
         }
     }
 
+    @Override
+    public boolean authenticatedUserHasAccessToUserById(Long id) {
+        if (!isAuthenticated()) {
+            LOGGER.error("Null authentification");
+            return false;
+        } else {
+            String currentUserEmail = getUserName();
+            UserDto userDto = userMapper.entityToDto(userDao.findByEmail(currentUserEmail));
+            if (userDto.getId().equals(id)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
     /**
      * Checks existence of an authenticated user, looks for the id of its pixelart if any, and compare it to the given id.
      * If matches, returned boolean set to "true"

@@ -17,6 +17,8 @@ public interface AuthenticationUtil {
 
     boolean authenticatedUserHasAccessToUser(UUID uuid);
 
+    boolean authenticatedUserHasAccessToUserById(Long id);
+
     boolean authenticatedUserHasAccessToPixelart(Long id);
 
     boolean isAuthenticated();

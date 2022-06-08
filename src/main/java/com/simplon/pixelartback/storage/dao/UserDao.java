@@ -11,6 +11,7 @@ import java.util.UUID;
 public interface UserDao extends JpaRepository<UserEntity, Long> {
 
     UserEntity findByUuid(UUID uuid);
+//    UserEntity findByUuid(UUID uuid);
 
     UserEntity getUserById(Long id);
 

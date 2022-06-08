@@ -110,13 +110,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional //(readOnly = false)
-    public void deleteUser(UUID uuid) {
-        if (uuid == null) {
+    public void deleteUser(Long id) {
+        if (id == null) {
             throw new IllegalArgumentException("UUID user missing");
         }
-        val existingEntity = userDao.findByUuid(uuid);
+        val existingEntity = userDao.getUserById(id);
         if (existingEntity == null) {
-            throw new IllegalArgumentException("User unknown : " + uuid);
+            throw new IllegalArgumentException("User unknown : " + id);
         }
 //        TODO: does not work when @PreAuthorize("hasAnyRole('USER')") on method in Controller,
 //         de valoszinuleg meg nem volt kesz a method, ami leveszi a "ROLE_3 prefixet!
@@ -124,6 +124,22 @@ public class UserServiceImpl implements UserService {
 //        if (Objects.equals(existingEntity.getRole().toString(), "USER")) {
             userDao.delete(existingEntity);
     }
+//    @Override
+//    @Transactional //(readOnly = false)
+//    public void deleteUser(UUID uuid) {
+//        if (uuid == null) {
+//            throw new IllegalArgumentException("UUID user missing");
+//        }
+//        val existingEntity = userDao.findByUuid(uuid);
+//        if (existingEntity == null) {
+//            throw new IllegalArgumentException("User unknown : " + uuid);
+//        }
+////        TODO: does not work when @PreAuthorize("hasAnyRole('USER')") on method in Controller,
+////         de valoszinuleg meg nem volt kesz a method, ami leveszi a "ROLE_3 prefixet!
+////        if (existingEntity.getRole().toString() == "USER") {
+////        if (Objects.equals(existingEntity.getRole().toString(), "USER")) {
+//            userDao.delete(existingEntity);
+//    }
 
 //    @Override
 ////    No need for @Transactional, right?
