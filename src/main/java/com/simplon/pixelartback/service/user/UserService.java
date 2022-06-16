@@ -36,8 +36,8 @@ public interface UserService {
 
     UserDto createUser(UserDto userDto);
 
-    void deleteUser(Long id);
-//    void deleteUser(UUID uuid);
+//    void deleteUser(Long id);
+    void deleteUser(UUID uuid);
 
 //    void loginUser(UserDto userDto) throws Exception;
 

@@ -111,8 +111,7 @@ public class UserController {
      * @param uuid
      * @return
      */
-    @DeleteMapping("/my-profile")
-    @PreAuthorize("hasAnyRole('USER')")
+
 //    @PreAuthorize("isAuthenticated()")
 //    public ResponseEntity<Void> deleteUser(String email) {
 //        if (authenticationUtil.authenticatedUserHasAccessToUser(uuid)) {
@@ -122,22 +121,24 @@ public class UserController {
 //        LOGGER.info("Not authorized to delete that User");
 //        return null;
 //    }
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
-        if (authenticationUtil.authenticatedUserHasAccessToUserById(id)) {
-            userService.deleteUser(id);
-            return ResponseEntity.ok().build();
-        }
-        LOGGER.info("Not authorized to delete that User");
-        return null;
-    }
-//    public ResponseEntity<Void> deleteUser(@PathVariable(name = "uuid") UUID uuid) {
-//        if (authenticationUtil.authenticatedUserHasAccessToUser(uuid)) {
-//            userService.deleteUser(uuid);
+//    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
+//        if (authenticationUtil.authenticatedUserHasAccessToUserById(id)) {
+//            userService.deleteUser(id);
 //            return ResponseEntity.ok().build();
 //        }
 //        LOGGER.info("Not authorized to delete that User");
 //        return null;
 //    }
+    @DeleteMapping("/my-profile/{uuid}")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<Void> deleteUser(@PathVariable(name = "uuid") UUID uuid) {
+        if (authenticationUtil.authenticatedUserHasAccessToUser(uuid)) {
+            userService.deleteUser(uuid);
+            return ResponseEntity.ok().build();
+        }
+        LOGGER.info("Not authorized to delete that User");
+        return null;
+    }
 
 //    @PostMapping("/login")
 //    public ResponseEntity<Void> loginUser(@RequestBody UserDto userDto) throws Exception {

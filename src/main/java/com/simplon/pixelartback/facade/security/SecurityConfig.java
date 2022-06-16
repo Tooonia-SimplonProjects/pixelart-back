@@ -126,13 +126,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "PUT", "DELETE"));
         configuration.addAllowedHeader("*");
         configuration.addExposedHeader("Authorization");
-//        configuration.setAllowedHeaders(Arrays.asList("Authorization", "content-type", "x-auth-token"));
-//        configuration.addExposedHeader("X-TOKEN"); //TODO: elvileg ez nem kell!
         configuration.setAllowCredentials(true);
-
-        // Authorized URLs
-        // 4200, 8085
-//        configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedOriginPatterns(Collections.singletonList("*"));
 
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
