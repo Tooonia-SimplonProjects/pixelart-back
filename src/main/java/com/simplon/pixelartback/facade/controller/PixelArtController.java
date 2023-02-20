@@ -116,10 +116,11 @@ public class PixelArtController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PixelArtSimpleDto> updatePixelArt(@PathVariable(name = "id") Long id, @RequestBody PixelArtSimpleDto pixelArtSimpleDto) throws Exception {
         if (authenticationUtil.authenticatedUserHasAccessToPixelart(id)) {
-            if(id.longValue() != pixelArtSimpleDto.getId().longValue()) {
-                throw new IllegalArgumentException("Id in URL " + id + " does not match the id of of current pixelArt : " + pixelArtSimpleDto.getId()
-                        + "PixelArt id can not be updated.");
-            }
+//            if(id.longValue() != pixelArtSimpleDto.getId().longValue()) {
+//                throw new IllegalArgumentException("Id in URL " + id + " does not match the id of of current pixelArt : " + pixelArtSimpleDto.getId()
+//                        + "PixelArt id can not be updated.");
+//            }
+//            LOGGER.info(String.valueOf(authenticationUtil.authenticatedUserHasAccessToPixelart(id)));
             return ResponseEntity.ok(pixelArtService.updatePixelArt(pixelArtSimpleDto));
         }
         LOGGER.info("Not authorized to update that PixelArt");
