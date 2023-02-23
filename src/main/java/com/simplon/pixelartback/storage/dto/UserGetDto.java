@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -27,10 +29,10 @@ public class UserGetDto {
     @JsonProperty("alias")
     private String alias;
 
-//    @Email // Ensures that the email is in a valid format.
-//    @NotNull // Means it is a required field.
-//    @JsonProperty("user_email")
-//    private String email;
+    @Email // Ensures that the email is in a valid format.
+    @NotNull // Means it is a required field.
+    @JsonProperty("user_email")
+    private String email;
 
 //    @JsonProperty("role")
 //    private RoleEntity role;

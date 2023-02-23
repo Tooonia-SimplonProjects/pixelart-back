@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -45,8 +46,8 @@ public class UserDto {
     @JsonProperty("role")
     private RoleEntity role;
 
-//    @JsonProperty("pixelarts")
-//    private List<PixelArtSimpleDto> pixelArtEntityList;
+    @JsonProperty("pixelarts")
+    private List<PixelArtSimpleDto> pixelArtEntityList;
 
     //    TODO: lehet, h kelleni fog a lista?
 //    @JsonProperty("pixelarts")

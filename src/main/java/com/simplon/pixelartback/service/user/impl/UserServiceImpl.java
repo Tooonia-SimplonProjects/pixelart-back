@@ -1,5 +1,6 @@
 package com.simplon.pixelartback.service.user.impl;
 
+import com.simplon.pixelartback.facade.security.AuthenticationUtil;
 import com.simplon.pixelartback.facade.security.PasswordHelper;
 import com.simplon.pixelartback.service.mapper.UserGetMapper;
 import com.simplon.pixelartback.service.mapper.UserMapper;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,17 +41,20 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordHelper passwordHelper;
 
+    @Autowired
+    private AuthenticationUtil authenticationUtil;
+
     @Override
     public List<UserGetDto> getAllUsers() throws EmptyResultDataAccessException {
         return userGetMapper.entitiesToDtos(userDao.findAll());
     }
 
     @Override
-    public UserDto getUserByUuid(UUID uuid) {
+    public UserGetDto getUserByUuid(UUID uuid) {
         if(uuid == null) {
             throw new IllegalArgumentException("UUID User is missing");
         }
-        return userMapper.entityToDto(userDao.findByUuid(uuid));
+        return userGetMapper.entityToDto(userDao.findByUuid(uuid));
     }
 
     @Override
@@ -60,11 +65,31 @@ public class UserServiceImpl implements UserService {
         return userGetMapper.entityToDto(userDao.getUserById(id));
     }
 
+    @Override
+    public UserGetDto getMe() {
+        Authentication auth = authenticationUtil.getAuthentication();
+        UserEntity  currentUser = userDao.findByEmail(auth.getName());
+        if(currentUser != null) {
+            return findConnectedUserByEmail(currentUser.getEmail());
+        }
+        return null;
+//        return userMapper.entityToDto(currentUser);
+    }
+    /**
+          * This method does not have a separate endpoint in the UserController, only helps here in this UserServiceImpl class.
+          */
+        public UserGetDto findConnectedUserByEmail(String email) {
+        if (email == null) {
+            throw new IllegalArgumentException("Email is missing");
+        }
+        UserEntity userEntity = userDao.findByEmail(email);
+        return userGetMapper.entityToDto(userEntity);
+    }
+
     /**
      * This method does not have a separate endpoint in the UserController, only helps here in this UserServiceImpl class.
      */
-        @Override
-    public UserDto findByEmail(String email, boolean withPassword) {
+        public UserDto findUserByLogin(String email, boolean withPassword) {
         if (email == null) {
             throw new IllegalArgumentException("Email is missing");
         }
@@ -75,14 +100,26 @@ public class UserServiceImpl implements UserService {
         }
         return result;
     }
+
     @Override
-    public UserDto findByAlias(String alias) {
+    public UserGetDto getConnectedUserPrivateProfileById(Long id) {
+        UserGetDto connectedUser = getMe();
+        if(connectedUser.getId().equals(id)) {
+            return connectedUser;
+        } else {
+            throw new IllegalArgumentException("Id does not belong to connected user"); //TODO: correct?
+        }
+
+    }
+
+    @Override
+    public UserGetDto findByAlias(String alias) {
         if (alias == null) {
             throw new IllegalArgumentException("Alias is missing");
         }
         UserEntity userEntity = userDao.findByAlias(alias);
 
-        return userMapper.entityToDto(userEntity);
+        return userGetMapper.entityToDto(userEntity);
     }
 
     @Override
@@ -108,31 +145,15 @@ public class UserServiceImpl implements UserService {
 //    TODO: updateUser ha lesz idom!!! <<< /my-profile -ban akkor valtoztathatom az alias-t,
 //     password-ot! Kell hozza a valideEntity() method is! source: UserServiceImpl
 
-//    @Override
-//    @Transactional //(readOnly = false)
-//    public void deleteUser(Long id) {
-//        if (id == null) {
-//            throw new IllegalArgumentException("UUID user missing");
-//        }
-//        val existingEntity = userDao.getUserById(id);
-//        if (existingEntity == null) {
-//            throw new IllegalArgumentException("User unknown : " + id);
-//        }
-////        TODO: does not work when @PreAuthorize("hasAnyRole('USER')") on method in Controller,
-////         de valoszinuleg meg nem volt kesz a method, ami leveszi a "ROLE_3 prefixet!
-////        if (existingEntity.getRole().toString() == "USER") {
-////        if (Objects.equals(existingEntity.getRole().toString(), "USER")) {
-//            userDao.delete(existingEntity);
-//    }
     @Override
     @Transactional //(readOnly = false)
-    public void deleteUser(UUID uuid) {
-        if (uuid == null) {
-            throw new IllegalArgumentException("UUID user missing");
+    public void deleteUser(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Id user missing");
         }
-        val existingEntity = userDao.findByUuid(uuid);
+        val existingEntity = userDao.getUserById(id);
         if (existingEntity == null) {
-            throw new IllegalArgumentException("User unknown : " + uuid);
+            throw new IllegalArgumentException("User unknown : " + id);
         }
 //        TODO: does not work when @PreAuthorize("hasAnyRole('USER')") on method in Controller,
 //         de valoszinuleg meg nem volt kesz a method, ami leveszi a "ROLE_3 prefixet!
@@ -140,6 +161,22 @@ public class UserServiceImpl implements UserService {
 //        if (Objects.equals(existingEntity.getRole().toString(), "USER")) {
             userDao.delete(existingEntity);
     }
+//    @Override
+//    @Transactional //(readOnly = false)
+//    public void deleteUser(UUID uuid) {
+//        if (uuid == null) {
+//            throw new IllegalArgumentException("UUID user missing");
+//        }
+//        val existingEntity = userDao.findByUuid(uuid);
+//        if (existingEntity == null) {
+//            throw new IllegalArgumentException("User unknown : " + uuid);
+//        }
+////        TODO: does not work when @PreAuthorize("hasAnyRole('USER')") on method in Controller,
+////         de valoszinuleg meg nem volt kesz a method, ami leveszi a "ROLE_3 prefixet!
+////        if (existingEntity.getRole().toString() == "USER") {
+////        if (Objects.equals(existingEntity.getRole().toString(), "USER")) {
+//            userDao.delete(existingEntity);
+//    }
 
 //    @Override
 ////    No need for @Transactional, right?

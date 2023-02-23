@@ -15,9 +15,11 @@ public interface AuthenticationUtil {
 
     Authentication getAuthentication();
 
-    boolean authenticatedUserHasAccessToUser(UUID uuid);
+//    boolean authenticatedUserHasAccessToUser(UUID uuid);
 
     boolean authenticatedUserHasAccessToUserById(Long id);
+
+//    boolean authenticatedUserHasAccessToUserByEmail(String email);
 
     boolean authenticatedUserHasAccessToPixelart(Long id);
 

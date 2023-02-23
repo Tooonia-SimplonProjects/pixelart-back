@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl extends AbstractDetailServiceImpl implements
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        UserDto user = getUserService().findByEmail(email, true);
+        UserDto user = getUserService().findUserByLogin(email, true);
         if (user == null) {
             throw new UsernameNotFoundException("Unknown email:" + email);
         }
