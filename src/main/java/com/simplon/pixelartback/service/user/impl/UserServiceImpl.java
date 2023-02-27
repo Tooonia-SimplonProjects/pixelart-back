@@ -70,15 +70,15 @@ public class UserServiceImpl implements UserService {
         Authentication auth = authenticationUtil.getAuthentication();
         UserEntity  currentUser = userDao.findByEmail(auth.getName());
         if(currentUser != null) {
-            return findConnectedUserByEmail(currentUser.getEmail());
+            return findUserByEmail(currentUser.getEmail());
         }
         return null;
 //        return userMapper.entityToDto(currentUser);
     }
     /**
-          * This method does not have a separate endpoint in the UserController, only helps here in this UserServiceImpl class.
-          */
-        public UserGetDto findConnectedUserByEmail(String email) {
+     * This method does not have a separate endpoint in the UserController, only helps here in this UserServiceImpl class.
+     */
+    public UserGetDto findUserByEmail(String email) {
         if (email == null) {
             throw new IllegalArgumentException("Email is missing");
         }

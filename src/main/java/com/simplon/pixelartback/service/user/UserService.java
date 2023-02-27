@@ -33,7 +33,7 @@ public interface UserService {
     UserGetDto getMe();
 
     UserDto findUserByLogin(String email, boolean withPassword);
-    UserGetDto findConnectedUserByEmail(String email);
+    UserGetDto findUserByEmail(String email);
 
     UserGetDto getConnectedUserPrivateProfileById(Long id);
 
