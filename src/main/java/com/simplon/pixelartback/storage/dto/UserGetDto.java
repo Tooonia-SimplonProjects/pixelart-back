@@ -18,13 +18,8 @@ import java.util.List;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class UserGetDto {
 
-//    TODO: Dto for art of one User (itt valoszinuleg CSAK az aliast es a pixelArtEntityList-tet akarjuk majd)
-//    TODO: for "/api/user/{id}"
     @JsonProperty("id")
     private Long id;
-
-//    @JsonProperty("uuid")
-//    private UUID uuid;
 
     @JsonProperty("alias")
     private String alias;
@@ -34,9 +29,11 @@ public class UserGetDto {
     @JsonProperty("user_email")
     private String email;
 
-//    @JsonProperty("role")
-//    private RoleEntity role;
-
+    /**
+     *  As for the conception of this UserDto element:
+     *  here PixelartSimpleDto has to be at its simple form, without the id_user_fk!!! Otherwhise
+     *  that would cause a circular referencing and hibernate error.
+     */
     @JsonProperty("pixelarts")
     private List<PixelArtSimpleDto> pixelArtEntityList;
 }

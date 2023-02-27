@@ -16,7 +16,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface UserGetMapper extends AbstractMapper<UserEntity, UserGetDto>{
     @Override
-    @Mapping(target = "email", source = "email", ignore = true)
+//    @Mapping(target = "email", source = "email", ignore = true)
     UserEntity dtoToEntity(UserGetDto dto);
 
     @Override
