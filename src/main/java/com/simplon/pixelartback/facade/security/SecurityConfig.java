@@ -81,7 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/users", "/api/user/{id}", "/api/signup", "/api/login",
+                .antMatchers("/api/users", "/api/user/{id}", "/api/signup", "/api/login", "/api/me",
                         "/api/pixelart-catalog", "/api/pixelart-simplelist", "/api/pixelart/{id}",
                         "/api/pixelart-simple/{id}", "/api/pixelart-by-user/{id}", "/api/authenticate").permitAll()
                 .antMatchers("/api/my-profile/{uuid}", "/api/pixelart-create",

@@ -78,6 +78,7 @@ public class UserServiceImpl implements UserService {
     /**
      * This method does not have a separate endpoint in the UserController, only helps here in this UserServiceImpl class.
      */
+    @Override
     public UserGetDto findUserByEmail(String email) {
         if (email == null) {
             throw new IllegalArgumentException("Email is missing");

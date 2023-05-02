@@ -68,6 +68,19 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
+    /**
+     * READ / GET one user with public information by id    GET /api/me
+     * @param email
+     * @return
+     */
+    @GetMapping("/me")
+    public ResponseEntity<UserGetDto> getUserByEmail(@RequestParam String email) {
+//    public ResponseEntity<UserGetDto> getUserByEmail(@RequestBody String email) {
+//        System.out.println(this.userService.findUserByEmail(email));
+        return ResponseEntity.ok(userService.findUserByEmail(email));
+
+    }
+
 //    /**
 //     * GET the user profile of the connected user by email (protected access)   GET  /api/my-profile
 //     * @return
