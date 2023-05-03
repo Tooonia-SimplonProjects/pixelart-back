@@ -219,7 +219,7 @@ public class UserController {
 //        LOGGER.info("Not authorized to delete that User");
 //        return null;
 //    }
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable(value = "id") Long id) {
         if (authenticationUtil.authenticatedUserHasAccessToUserById(id)) {
             userService.deleteUser(id);
             return ResponseEntity.ok().build();

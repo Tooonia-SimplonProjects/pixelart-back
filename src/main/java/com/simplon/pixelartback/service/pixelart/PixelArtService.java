@@ -19,7 +19,7 @@ public interface PixelArtService {
 
     List<PixelArtDto> getAllPixelArtByUser(Long id);
 
-    PixelArtDto createPixelArt(PixelArtDto pixelArtDto);
+    PixelArtSimpleDto createPixelArt(PixelArtSimpleDto pixelArtDto);
     PixelArtSimpleDto updatePixelArt(PixelArtSimpleDto pixelArtDto);
 //    void deletePixelArt(UUID uuid);
     void deletePixelArt(Long id);

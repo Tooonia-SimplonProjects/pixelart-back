@@ -7,17 +7,12 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
-/**
- * This DTO is a simplified version, and serves to expose the data of a specific User.
- * No sensitive data, like email or password, are transmitted, so no such fields are required.
- */
 @Getter
 @Setter
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class UserGetDto {
-
+public class UserGetSlimDto {
+//    TODO: maybe no need for 'id' field neither?!
     @JsonProperty("id")
     private Long id;
 
@@ -28,12 +23,4 @@ public class UserGetDto {
     @NotNull // Means it is a required field.
     @JsonProperty("userEmail")
     private String email;
-
-    /**
-     *  As for the conception of this UserDto element:
-     *  here PixelartSimpleDto has to be at its simple form, without the id_user_fk!!! Otherwhise
-     *  that would cause a circular referencing and hibernate error.
-     */
-    @JsonProperty("pixelarts")
-    private List<PixelArtSimpleDto> pixelArtEntityList;
 }

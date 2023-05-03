@@ -58,7 +58,7 @@ public class PixelArtController {
      * @throws Exception
      */
     @GetMapping("/pixelart/{id}")
-    public ResponseEntity<PixelArtDto> getPixelArtById(@PathVariable("id") Long id) throws Exception {
+    public ResponseEntity<PixelArtDto> getPixelArtById(@PathVariable(value = "id") Long id) throws Exception {
         return  ResponseEntity.ok(pixelArtService.getPixelArtById(id));
     }
 
@@ -69,7 +69,7 @@ public class PixelArtController {
      * @throws Exception
      */
     @GetMapping("/pixelart-simple/{id}")
-    public ResponseEntity<PixelArtSimpleDto> getSimplePixelArtById(@PathVariable("id") Long id) throws Exception {
+    public ResponseEntity<PixelArtSimpleDto> getSimplePixelArtById(@PathVariable(value = "id") Long id) throws Exception {
         return  ResponseEntity.ok(pixelArtService.getSimplePixelArtById(id));
     }
 
@@ -80,7 +80,7 @@ public class PixelArtController {
      * @throws Exception
      */
     @GetMapping("/pixelart-by-user/{id}")
-    public ResponseEntity<List<PixelArtDto>> getAllPixelArtByUser(@PathVariable("id") Long id) throws Exception {
+    public ResponseEntity<List<PixelArtDto>> getAllPixelArtByUser(@PathVariable(value = "id") Long id) throws Exception {
         return ResponseEntity.ok(pixelArtService.getAllPixelArtByUser(id));
     }
 
@@ -114,7 +114,7 @@ public class PixelArtController {
     @PutMapping("/pixelart-edit/{id}")
 //    @PreAuthorize("hasAnyRole('USER')")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<PixelArtSimpleDto> updatePixelArt(@PathVariable(name = "id") Long id, @RequestBody PixelArtSimpleDto pixelArtSimpleDto) throws Exception {
+    public ResponseEntity<PixelArtSimpleDto> updatePixelArt(@PathVariable(value = "id") Long id, @RequestBody PixelArtSimpleDto pixelArtSimpleDto) throws Exception {
         if (authenticationUtil.authenticatedUserHasAccessToPixelart(id)) {
 //            if(id.longValue() != pixelArtSimpleDto.getId().longValue()) {
 //                throw new IllegalArgumentException("Id in URL " + id + " does not match the id of of current pixelArt : " + pixelArtSimpleDto.getId()
@@ -137,9 +137,10 @@ public class PixelArtController {
     @DeleteMapping("/pixelart-edit/{id}")
 //    @PreAuthorize("hasAnyRole('USER')")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Void> deletePixelArt(@PathVariable(name = "id") Long id) throws Exception {
+    public ResponseEntity<Void> deletePixelArt(@PathVariable(value = "id") Long id) throws Exception {
         if (authenticationUtil.authenticatedUserHasAccessToPixelart(id)) {
             pixelArtService.deletePixelArt(id);
+            LOGGER.info("PixelArt deleted.");
             return ResponseEntity.ok().build();
         }
         LOGGER.info("Not authorized to delete that PixelArt");

@@ -35,21 +35,22 @@ public class UserDto {
 
     @Email // Ensures that the email is in a valid format.
     @NotNull // Means it is a required field.
-    @JsonProperty("user_email")
+    @JsonProperty("userEmail")
     private String email;
 
     @NotNull
-    @JsonProperty("user_password")
+    @JsonProperty("userPassword")
     private String password;
 
     @JsonProperty("role")
     private RoleEntity role;
 
-    /**
-     *  As for the conception of this UserDto element:
-     *  here PixelartSimpleDto has to be at its simple form, without the id_user_fk!!! Otherwhise
-     *  that would cause a circular/never ending referencing and hibernate error.
-     */
-    @JsonProperty("pixelarts")
-    private List<PixelArtSimpleDto> pixelArtEntityList;
+//    REMARK: no need a pixelart list when creating a user!
+//    /**
+//     *  As for the conception of this UserDto element:
+//     *  here PixelartSimpleDto has to be at its simple form, without the id_user_fk!!! Otherwhise
+//     *  that would cause a circular/never ending referencing and hibernate error.
+//     */
+//    @JsonProperty("pixelarts")
+//    private List<PixelArtSimpleDto> pixelArtEntityList;
 }

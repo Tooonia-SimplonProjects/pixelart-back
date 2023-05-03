@@ -25,6 +25,6 @@ public class PixelArtDto {
      * as PixelArtSimpleDto has only id and name parameters. Otherwhise
      * it would cause a circular referencing and hibernate error.
      */
-    @JsonProperty("id_user_fk")
-    private UserGetDto userEntity;
+    @JsonProperty("user")
+    private UserGetSlimDto userEntity;
 }
