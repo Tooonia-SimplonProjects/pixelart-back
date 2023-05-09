@@ -4,7 +4,6 @@ import com.simplon.pixelartback.facade.security.AuthenticationUtil;
 import com.simplon.pixelartback.storage.dto.PixelArtDto;
 import com.simplon.pixelartback.service.pixelart.PixelArtService;
 import com.simplon.pixelartback.storage.dto.PixelArtSimpleDto;
-import com.simplon.pixelartback.storage.entity.pixelart.PixelArtEntity;
 import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,16 +85,16 @@ public class PixelArtController {
 
     /**
      * CREATE an own pixelArt    POST  /api/pixelart
-     * @param pixelArtDto
+     * @param pixelArtSimpleDto
      * @return
      * @throws Exception
      */
     @PostMapping("/pixelart-create")
 //    @PreAuthorize("hasAnyRole('USER')")
     @PreAuthorize("isAuthenticated()") // TODO: Probably double definition with SecurityContext!!!
-    public ResponseEntity<PixelArtDto> createPixelArt(@RequestBody PixelArtDto pixelArtDto) throws Exception {
+    public ResponseEntity<PixelArtSimpleDto> createPixelArt(@RequestBody PixelArtSimpleDto pixelArtSimpleDto) throws Exception {
         if (authenticationUtil.isAuthenticated()) {
-            val createdPixelArtDto = pixelArtService.createPixelArt(pixelArtDto);
+            val createdPixelArtDto = pixelArtService.createPixelArt(pixelArtSimpleDto);
             val location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                     .buildAndExpand(createdPixelArtDto.getId()).toUri();
             return ResponseEntity.created(location).body(createdPixelArtDto);
