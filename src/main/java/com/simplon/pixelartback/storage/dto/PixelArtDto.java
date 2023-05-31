@@ -16,8 +16,15 @@ public class PixelArtDto {
     @JsonProperty("name")
     private String name;
 
-//    @Column(name = "image", nullable = false)
+    @JsonProperty("width")
+    private String width;
+
+    @JsonProperty("height")
+    private String height;
+
+    @JsonProperty("canvas")
 //    TODO: see format: Blob, BlobType, Image // private Base64 productImage;
+    private Long[] canvas;
 
     /**
      * As for the conception of this PixelArtDto element:
