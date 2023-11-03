@@ -44,26 +44,26 @@ public class AuthenticationUtilImpl implements AuthenticationUtil {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
-    /**
-     * Checks existence of an authenticated user, looks for its UUID if user exists, and compare it to the given UUID.
-     * If matches, returned boolean set to "true"
-     * @param uuid
-     * @return
-     */
-    public boolean authenticatedUserHasAccessToUser(UUID uuid) {
-        if (!isAuthenticated()) {
-            LOGGER.error("Null authentification");
-            return false;
-        } else {
-        String currentUserEmail = getUserName();
-            UserDto userDto = userMapper.entityToDto(userDao.findByEmail(currentUserEmail));
-            if (userDto.getUuid().equals(uuid)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
+//    /**
+//     * Checks existence of an authenticated user, looks for its UUID if user exists, and compare it to the given UUID.
+//     * If matches, returned boolean set to "true"
+//     * @param uuid
+//     * @return
+//     */
+//    public boolean authenticatedUserHasAccessToUser(UUID uuid) {
+//        if (!isAuthenticated()) {
+//            LOGGER.error("Null authentification");
+//            return false;
+//        } else {
+//        String currentUserEmail = getUserName();
+//            UserDto userDto = userMapper.entityToDto(userDao.findByEmail(currentUserEmail));
+//            if (userDto.getUuid().equals(uuid)) {
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        }
+//    }
 
     @Override
     public boolean authenticatedUserHasAccessToUserById(Long id) {
@@ -72,8 +72,8 @@ public class AuthenticationUtilImpl implements AuthenticationUtil {
             return false;
         } else {
             String currentUserEmail = getUserName();
-            UserDto userDto = userMapper.entityToDto(userDao.findByEmail(currentUserEmail));
-            if (userDto.getId().equals(id)) {
+            UserGetDto userGetDto = userGetMapper.entityToDto(userDao.findByEmail(currentUserEmail));
+            if (userGetDto.getId().equals(id)) {
                 return true;
             } else {
                 return false;
@@ -81,6 +81,26 @@ public class AuthenticationUtilImpl implements AuthenticationUtil {
         }
     }
 
+//    @Override
+//    public boolean authenticatedUserHasAccessToUserByEmail(String email) {
+//        if (!isAuthenticated()) {
+//            LOGGER.error("Null authentification");
+//            return false;
+//        } else {
+//            String currentUserEmail = getUserName();
+//            UserDto userDto = userMapper.entityToDto(userDao.findByEmail(currentUserEmail));
+////            if (userDto.getId().equals(id)) {
+////                return true;
+////            } else {
+////                return false;
+////            }
+//            if (userDto.getEmail().equals(email)) {
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        }
+//    }
     /**
      * Checks existence of an authenticated user, looks for the id of its pixelart if any, and compare it to the given id.
      * If matches, returned boolean set to "true"
@@ -104,10 +124,11 @@ public class AuthenticationUtilImpl implements AuthenticationUtil {
     }
 
 
-    /**
-     * Cheks if there is current authentication
-     * @return
-     */
+//    /**
+//     * Cheks if there is current authentication
+//     * p
+//     * @return
+//     */
     public boolean isAuthenticated() {
         Authentication authentication = getAuthentication();
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {

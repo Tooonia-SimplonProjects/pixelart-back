@@ -16,7 +16,7 @@ public interface UserService {
     /**
     * For /my-profile, information with email info (private access):
     */
-    UserDto getUserByUuid(UUID uuid);
+    UserGetDto getUserByUuid(UUID uuid);
 
     /**
      * For listing the pixelart of one specific User (public access):
@@ -30,16 +30,19 @@ public interface UserService {
 //     * GET the connected user TODO: kell?
 //     * @return
 //     */
-//    UserDto getMe();
+    UserGetDto getMe();
 
-    UserDto findByEmail(String email, boolean withPassword);
+    UserDto findUserByLogin(String email, boolean withPassword);
+    UserGetDto findUserByEmail(String email);
+
+    UserGetDto getConnectedUserPrivateProfileById(Long id);
 
     UserDto createUser(UserDto userDto);
 
-//    void deleteUser(Long id);
-    void deleteUser(UUID uuid);
+    void deleteUser(Long id);
+//    void deleteUser(UUID uuid);
 
 //    void loginUser(UserDto userDto) throws Exception;
 
-    UserDto findByAlias(String alias);
+    UserGetDto findByAlias(String alias);
 }

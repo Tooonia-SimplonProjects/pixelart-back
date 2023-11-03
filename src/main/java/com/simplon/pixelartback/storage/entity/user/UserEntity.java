@@ -56,6 +56,10 @@ public class UserEntity implements Serializable {
 ////    in the response recursively under "pixelArtEntityList" with a GET all for PixelArt:
 //    Finally: removed "cascade = CascadeType.ALL" and added that code from:
 //    source: https://stackoverflow.com/questions/22688402/delete-not-working-with-jparepository
+//    Adding back 'cascade = CascadeType.ALL', meaning that any change happened on UserEntity must cascade to PixelArtEntity as well.
+//    If a User is delated, all the associated pixelarts will be also deleted.
+//    source: https://howtodoinjava.com/hibernate/hibernate-jpa-cascade-types/
+//    Removed again, as adding back resulted in the same error: delete pixelart did not work with!
     @OneToMany(mappedBy="userEntity", orphanRemoval = true, fetch = FetchType.EAGER, targetEntity = PixelArtEntity.class)
     @JsonIgnoreProperties("userEntity")
     private List<PixelArtEntity> pixelArtEntityList;

@@ -33,8 +33,16 @@ public class PixelArtEntity implements Serializable {
     @Column(name = "name", length = 50, nullable = false, unique = true)
     private String name;
 
-//    @Column(name = "image", nullable = false)
+    @Column(name = "width", length = 50, nullable = false)
+    private String width;
+
+    @Column(name = "height", length = 50, nullable = false)
+    private String height;
+
+    @Column(name = "canvas", nullable = false)
 //    TODO: see format: Blob, BlobType, Image // private Base64 productImage;
+    private Long[] canvas;
+//    private byte[] canvas;
 
 //    Cascading expresses dependency between 2 entities: if User does not exist, PixelArt has no meaning on its own.
 //    PixelArt depends on the existence of a User.

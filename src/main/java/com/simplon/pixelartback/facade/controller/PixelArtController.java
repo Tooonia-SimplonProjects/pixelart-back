@@ -4,7 +4,6 @@ import com.simplon.pixelartback.facade.security.AuthenticationUtil;
 import com.simplon.pixelartback.storage.dto.PixelArtDto;
 import com.simplon.pixelartback.service.pixelart.PixelArtService;
 import com.simplon.pixelartback.storage.dto.PixelArtSimpleDto;
-import com.simplon.pixelartback.storage.entity.pixelart.PixelArtEntity;
 import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +57,7 @@ public class PixelArtController {
      * @throws Exception
      */
     @GetMapping("/pixelart/{id}")
-    public ResponseEntity<PixelArtDto> getPixelArtById(@PathVariable("id") Long id) throws Exception {
+    public ResponseEntity<PixelArtDto> getPixelArtById(@PathVariable(value = "id") Long id) throws Exception {
         return  ResponseEntity.ok(pixelArtService.getPixelArtById(id));
     }
 
@@ -69,7 +68,7 @@ public class PixelArtController {
      * @throws Exception
      */
     @GetMapping("/pixelart-simple/{id}")
-    public ResponseEntity<PixelArtSimpleDto> getSimplePixelArtById(@PathVariable("id") Long id) throws Exception {
+    public ResponseEntity<PixelArtSimpleDto> getSimplePixelArtById(@PathVariable(value = "id") Long id) throws Exception {
         return  ResponseEntity.ok(pixelArtService.getSimplePixelArtById(id));
     }
 
@@ -80,22 +79,22 @@ public class PixelArtController {
      * @throws Exception
      */
     @GetMapping("/pixelart-by-user/{id}")
-    public ResponseEntity<List<PixelArtDto>> getAllPixelArtByUser(@PathVariable("id") Long id) throws Exception {
+    public ResponseEntity<List<PixelArtDto>> getAllPixelArtByUser(@PathVariable(value = "id") Long id) throws Exception {
         return ResponseEntity.ok(pixelArtService.getAllPixelArtByUser(id));
     }
 
     /**
      * CREATE an own pixelArt    POST  /api/pixelart
-     * @param pixelArtDto
+     * @param pixelArtSimpleDto
      * @return
      * @throws Exception
      */
     @PostMapping("/pixelart-create")
 //    @PreAuthorize("hasAnyRole('USER')")
     @PreAuthorize("isAuthenticated()") // TODO: Probably double definition with SecurityContext!!!
-    public ResponseEntity<PixelArtDto> createPixelArt(@RequestBody PixelArtDto pixelArtDto) throws Exception {
+    public ResponseEntity<PixelArtSimpleDto> createPixelArt(@RequestBody PixelArtSimpleDto pixelArtSimpleDto) throws Exception {
         if (authenticationUtil.isAuthenticated()) {
-            val createdPixelArtDto = pixelArtService.createPixelArt(pixelArtDto);
+            val createdPixelArtDto = pixelArtService.createPixelArt(pixelArtSimpleDto);
             val location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                     .buildAndExpand(createdPixelArtDto.getId()).toUri();
             return ResponseEntity.created(location).body(createdPixelArtDto);
@@ -114,7 +113,7 @@ public class PixelArtController {
     @PutMapping("/pixelart-edit/{id}")
 //    @PreAuthorize("hasAnyRole('USER')")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<PixelArtSimpleDto> updatePixelArt(@PathVariable(name = "id") Long id, @RequestBody PixelArtSimpleDto pixelArtSimpleDto) throws Exception {
+    public ResponseEntity<PixelArtSimpleDto> updatePixelArt(@PathVariable(value = "id") Long id, @RequestBody PixelArtSimpleDto pixelArtSimpleDto) throws Exception {
         if (authenticationUtil.authenticatedUserHasAccessToPixelart(id)) {
 //            if(id.longValue() != pixelArtSimpleDto.getId().longValue()) {
 //                throw new IllegalArgumentException("Id in URL " + id + " does not match the id of of current pixelArt : " + pixelArtSimpleDto.getId()
@@ -137,9 +136,10 @@ public class PixelArtController {
     @DeleteMapping("/pixelart-edit/{id}")
 //    @PreAuthorize("hasAnyRole('USER')")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Void> deletePixelArt(@PathVariable(name = "id") Long id) throws Exception {
+    public ResponseEntity<Void> deletePixelArt(@PathVariable(value = "id") Long id) throws Exception {
         if (authenticationUtil.authenticatedUserHasAccessToPixelart(id)) {
             pixelArtService.deletePixelArt(id);
+            LOGGER.info("PixelArt deleted.");
             return ResponseEntity.ok().build();
         }
         LOGGER.info("Not authorized to delete that PixelArt");

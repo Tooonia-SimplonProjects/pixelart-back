@@ -10,10 +10,12 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.UUID;
 
 /**
- * The validation logic is defined at that level: with @NotNull, @Email
+ * This DTO is a more complete version, with password.
+ * The validation logic of certain parameters is defined at that level: with @NotNull, @Email
  */
 @Getter
 @Setter
@@ -22,7 +24,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserDto {
 
-//    TODO: lehet, h az "id" sem kell! Vagy uuid inkabb helyette?
     @JsonProperty("id")
     private Long id;
 
@@ -34,22 +35,22 @@ public class UserDto {
 
     @Email // Ensures that the email is in a valid format.
     @NotNull // Means it is a required field.
-    @JsonProperty("user_email")
+    @JsonProperty("userEmail")
     private String email;
 
     @NotNull
-    @JsonProperty("user_password")
+    @JsonProperty("userPassword")
     private String password;
 
-    //    TODO: lehet, h kelleni fog a role?
     @JsonProperty("role")
     private RoleEntity role;
 
+//    REMARK: no need a pixelart list when creating a user!
+//    /**
+//     *  As for the conception of this UserDto element:
+//     *  here PixelartSimpleDto has to be at its simple form, without the id_user_fk!!! Otherwhise
+//     *  that would cause a circular/never ending referencing and hibernate error.
+//     */
 //    @JsonProperty("pixelarts")
 //    private List<PixelArtSimpleDto> pixelArtEntityList;
-
-    //    TODO: lehet, h kelleni fog a lista?
-//    @JsonProperty("pixelarts")
-//    private List<PixelArtEntity> pixelArtEntityList;
-
 }

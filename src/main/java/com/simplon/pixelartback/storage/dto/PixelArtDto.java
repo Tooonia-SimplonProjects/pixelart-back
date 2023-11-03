@@ -13,19 +13,25 @@ public class PixelArtDto {
     @JsonProperty("id")
     private Long id;
 
-//    @JsonProperty("uuid")
-//    private UUID uuid;
-
     @JsonProperty("name")
     private String name;
 
-//    @Column(name = "image", nullable = false)
-//    TODO: see format: Blob, BlobType, Image // private Base64 productImage;
+    @JsonProperty("width")
+    private String width;
 
-//    @JsonProperty("id_user_fk")
-//    private Long userEntity;
-    @JsonProperty("id_user_fk") //TODO: lehet, h ide
-    private UserGetDto userEntity;
-//    @JsonProperty("id_user_fk")
-//    private UserEntity userEntity;
+    @JsonProperty("height")
+    private String height;
+
+    @JsonProperty("canvas")
+//    TODO: see format: Blob, BlobType, Image // private Base64 productImage;
+    private Long[] canvas;
+
+    /**
+     * As for the conception of this PixelArtDto element:
+     * here UserGetDto has to have a simplified version of PixelArts, without the id_user_fk!!!,
+     * as PixelArtSimpleDto has only id and name parameters. Otherwhise
+     * it would cause a circular referencing and hibernate error.
+     */
+    @JsonProperty("user")
+    private UserGetSlimDto userEntity;
 }

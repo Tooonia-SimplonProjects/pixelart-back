@@ -40,24 +40,25 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    /**
-     * READ / GET one user by Uuid, with detailed User information including email (protected access)   GET /api/user/{uuid}
-     * @param uuid
-     * @return
-     */
-    @GetMapping("/my-profile/{uuid}")
-//    @PreAuthorize("hasAnyRole('USER')")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<UserDto> getUserByUuid(@PathVariable("uuid") UUID uuid) {
-        if (authenticationUtil.authenticatedUserHasAccessToUser(uuid)) {
-            return ResponseEntity.ok(userService.getUserByUuid(uuid));
-        }
-        LOGGER.info("Not authorized to access that User information");
-        return null;
-    }
+//    /**
+//     * READ / GET one user by Uuid, with detailed User information including email (protected access)
+//     * Not used on Front-end for the moment
+//     * @param uuid
+//     * @return
+//     */
+//    @GetMapping("/my-profile/{uuid}")
+////    @PreAuthorize("hasAnyRole('USER')")
+//    @PreAuthorize("isAuthenticated()")
+//    public ResponseEntity<UserDto> getUserByUuid(@PathVariable("uuid") UUID uuid) {
+//        if (authenticationUtil.authenticatedUserHasAccessToUser(uuid)) {
+//            return ResponseEntity.ok(userService.getUserByUuid(uuid));
+//        }
+//        LOGGER.info("Not authorized to access that User information");
+//        return null;
+//    }
 
     /**
-     * READ / GET one user by id    GET /api/user/{id}
+     * READ / GET one user with public information by id    GET /api/user/{id}
      * @param id
      * @return
      */
@@ -68,13 +69,106 @@ public class UserController {
     }
 
     /**
-     * GET the user profile of the connected user by email (protected access)   GET  /api/user/me
+     * READ / GET one user with public information by id    GET /api/me
+     * @param email
      * @return
      */
-    @GetMapping("/user")
-    public ResponseEntity<UserDto> getUserByEmail(String email, boolean withPassword) {
-        return ResponseEntity.ok(userService.findByEmail(email, withPassword));
+    @GetMapping("/me")
+    public ResponseEntity<UserGetDto> getUserByEmail(@RequestParam String email) {
+//    public ResponseEntity<UserGetDto> getUserByEmail(@RequestBody String email) {
+//        System.out.println(this.userService.findUserByEmail(email));
+        return ResponseEntity.ok(userService.findUserByEmail(email));
+
     }
+
+//    /**
+//     * GET the user profile of the connected user by email (protected access)   GET  /api/my-profile
+//     * @return
+//     */
+//    @GetMapping("/user-profile")
+//    @PreAuthorize("isAuthenticated()")
+////    public ResponseEntity<UserDto> getUserByEmail(@RequestBody String email) throws Exception {
+////    public ResponseEntity<UserDto> getConnectedUserProfile() throws Exception {
+//    public ResponseEntity<UserDto> getConnectedUserProfile(@PathVariable("id") Long id) throws Exception {
+////    public ResponseEntity<UserDto> findUserByLogin(String email, boolean withPassword) throws Exception {
+////        if (authenticationUtil.isAuthenticated()) {//TODO: elvileg ez nem kell!
+////            return ResponseEntity.ok(userService.findByEmail(email));
+////        }
+//        //return ResponseEntity.ok(userService.getMe()); //TODO: csak ez a sor volt itt az elobb!!!
+////        LOGGER.info("You have to be logged in to create pixelart");
+////        return null;
+//
+//        //2.proba
+////        if (userService.getMe().getEmail().equals(email)) {
+////            return ResponseEntity.ok(userService.getMe());
+////        } else {
+////            throw new IllegalArgumentException("Email does not belong to connected user"); //TODO: correct?
+////        }
+//        if (authenticationUtil.authenticatedUserHasAccessToUserById(id)) {
+////          //3.proba
+////          return userService.getConnectedUserPrivateProfileByEmail(email);
+//            return ResponseEntity.ok(userService.getConnectedUserPrivateProfileById(id));
+//
+////        if (authenticationUtil.authenticatedUserHasAccessToUserByEmail(email)) {
+//////            return userService.getConnectedUserPrivateProfileByEmail(email);
+////            return ResponseEntity.ok(userService.getConnectedUserPrivateProfileByEmail(email));
+//        } else {
+//            LOGGER.info("Not authorized to access that User information");
+//        }
+//        return null;
+//    }
+
+    /**
+     * GET the user profile of the connected user (protected access)   GET  /api/my-profile
+     * @return
+     */
+    @GetMapping("/my-profile/{id}")
+    @PreAuthorize("isAuthenticated()")
+//    public ResponseEntity<UserDto> getUserByEmail(@RequestBody String email) throws Exception {
+//    public ResponseEntity<UserDto> getConnectedUserProfile() throws Exception {
+    public ResponseEntity<UserGetDto> getConnectedUserProfile(@PathVariable("id") Long id) throws Exception {
+//    public ResponseEntity<UserDto> findUserByLogin(String email, boolean withPassword) throws Exception {
+//        if (authenticationUtil.isAuthenticated()) {//TODO: elvileg ez nem kell!
+//            return ResponseEntity.ok(userService.findByEmail(email));
+//        }
+        //return ResponseEntity.ok(userService.getMe()); //TODO: csak ez a sor volt itt az elobb!!!
+//        LOGGER.info("You have to be logged in to create pixelart");
+//        return null;
+
+        //2.proba
+//        if (userService.getMe().getEmail().equals(email)) {
+//            return ResponseEntity.ok(userService.getMe());
+//        } else {
+//            throw new IllegalArgumentException("Email does not belong to connected user"); //TODO: correct?
+//        }
+        if (authenticationUtil.authenticatedUserHasAccessToUserById(id)) {
+//          //3.proba
+//          return userService.getConnectedUserPrivateProfileByEmail(email);
+            return ResponseEntity.ok(userService.getConnectedUserPrivateProfileById(id));
+
+//        if (authenticationUtil.authenticatedUserHasAccessToUserByEmail(email)) {
+////            return userService.getConnectedUserPrivateProfileByEmail(email);
+//            return ResponseEntity.ok(userService.getConnectedUserPrivateProfileByEmail(email));
+        } else {
+            LOGGER.info("Not authorized to access that User information");
+        }
+        return null;
+    }
+
+//    GET user by email
+//    @GetMapping("/user")
+
+    /**
+     * GET connected user private information for my-profile info
+     * @return
+     */
+    @GetMapping("/user/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UserGetDto> getMe() {
+        return ResponseEntity.ok(userService.getMe());
+    }
+
+
 
     //TODO: kell ez method? Egyelore nem mukodik!!!
 //    @GetMapping("/user/me")
@@ -108,10 +202,14 @@ public class UserController {
 
     /**
      *  DELETE one user by id      DELETE  /api/my-profile/{id}
-     * @param uuid
+     * //@param uuid
+     * @param id
      * @return
      */
-
+//    @DeleteMapping("/my-profile/{uuid}")
+    @DeleteMapping("/my-profile/{id}")
+//    @PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("isAuthenticated()")
 //    @PreAuthorize("isAuthenticated()")
 //    public ResponseEntity<Void> deleteUser(String email) {
 //        if (authenticationUtil.authenticatedUserHasAccessToUser(uuid)) {
@@ -121,24 +219,23 @@ public class UserController {
 //        LOGGER.info("Not authorized to delete that User");
 //        return null;
 //    }
-//    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
-//        if (authenticationUtil.authenticatedUserHasAccessToUserById(id)) {
-//            userService.deleteUser(id);
-//            return ResponseEntity.ok().build();
-//        }
-//        LOGGER.info("Not authorized to delete that User");
-//        return null;
-//    }
-    @DeleteMapping("/my-profile/{uuid}")
-    @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<Void> deleteUser(@PathVariable(name = "uuid") UUID uuid) {
-        if (authenticationUtil.authenticatedUserHasAccessToUser(uuid)) {
-            userService.deleteUser(uuid);
+    public ResponseEntity<Void> deleteUser(@PathVariable(value = "id") Long id) {
+        if (authenticationUtil.authenticatedUserHasAccessToUserById(id)) {
+            userService.deleteUser(id);
             return ResponseEntity.ok().build();
         }
         LOGGER.info("Not authorized to delete that User");
         return null;
     }
+
+//    public ResponseEntity<Void> deleteUser(@PathVariable(name = "uuid") UUID uuid) {
+//        if (authenticationUtil.authenticatedUserHasAccessToUser(uuid)) {
+//            userService.deleteUser(uuid);
+//            return ResponseEntity.ok().build();
+//        }
+//        LOGGER.info("Not authorized to delete that User");
+//        return null;
+//    }
 
 //    @PostMapping("/login")
 //    public ResponseEntity<Void> loginUser(@RequestBody UserDto userDto) throws Exception {
